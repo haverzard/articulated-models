@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    
+    <title>Articulated Model WebGL</title>
+    <link href="screen.css" rel="stylesheet" />
+    <link href="help.css" rel="stylesheet" />
+    <script src="util/matrix.js"></script>
+    <script src="util/util.js"></script>
+    <script src="view/main.js"></script>
+    <script src="model/object.js"></script>
+    <script src="model/polygon.js"></script>
+    <script src="controller/main.js"></script>
+    <script src="shaders/norm_vertex.js"></script>
+    <script src="shaders/color_frag.js"></script>
+  </head>
+  <body>
+    <div id="paint-app">
+        <section id="workspace">
+          <div>
+            <div id="myDIV">
+              <input type="file" id="file-uploader" />
+            </div>
+            <canvas id="main-view" width="800" height="500"></canvas>
+          </div>
+          <div id="left-side">
+            <div id="btn-container">
+            </div>
+            <div id="mode-container">
+              <button id="rotate-btn">Rotate</button>
+              <button id="translate-btn">Translate</button>
+              <button id="scale-btn">Scale</button>
+              <button id="shading-btn">Shading</button>
+            </div>
+            <div id="trf-container">
+              <section id="rotate-sec">
+                <label>Rotate X</label><br/>
+                <input class="slider" id="rotate-0" type="range" min=0 max=360 value=0>
+                <br/>
+                <label>Rotate Y</label><br/>
+                <input class="slider" id="rotate-1" type="range" min=0 max=360 value=0>
+                <br/>
+                <label>Rotate Z</label><br/>
+                <input class="slider" id="rotate-2" type="range" min=0 max=360 value=0>
+                <br/>
+              </section>
+              <section id="translate-sec">
+                <label>Translate X</label><br/>
+                <input id="translate-0" type="number" value=0>
+                <br/>
+                <label>Translate Y</label><br/>
+                <input id="translate-1" type="number" value=0>
+                <br/>
+                <label>Translate Z</label><br/>
+                <input id="translate-2" type="number" value=0>
+              </section>
+              <section id="scale-sec">
+                <label>Scale</label><br/>
+                <input id="scale" type="number" value=0>
+              </section>
+            </div>
+            <div id="confirm-container">
+              <button id="apply-btn">Apply</button>
+              <button id="cancel-btn">Cancel</button>
+            </div>
+            <div>
+              <div id="proj-container">
+                <h3>Projection</h3>
+                <div id="proj-sel-container">
+                  <button id="ortho-btn">Orthogonal</button>
+                  <button id="pspec-btn">Perspective</button>
+                  <button id="oblique-btn">Oblique</button>
+                  <button id="reset-btn">Reset</button>
+                </div>
+                <div id="proj-config-container">
+                  <section id="ortho-sec">
+                    <div>
+                      <label>Left</label><br/>
+                      <input id="ortho-left" type="number" value=-1>
+                      <br/>
+                      <label>Right</label><br/>
+                      <input id="ortho-right" type="number" value=1>
+                      <br/>
+                      <label>Bottom</label><br/>
+                      <input id="ortho-bottom" type="number" value=-1>
+                      <br/>
+                    </div>
+                    <div>
+                      <label>Top</label><br/>
+                      <input id="ortho-top" type="number" value=1>
+                      <br/>
+                      <label>Near</label><br/>
+                      <input id="ortho-near" type="number" value=0.01>
+                      <br/>
+                      <label>Far</label><br/>
+                      <input id="ortho-far" type="number" value=100>
+                      <br/>
+                    </div>
+                  </section>
+                  <section id="pspec-sec">
+                    <label>Fovy (deg)</label><br/>
+                    <input id="pspec-fovy" type="number" value=45>
+                    <br/>
+                    <label>Aspect</label><br/>
+                    <input id="pspec-aspect" type="number" value=1>
+                    <br/>
+                    <label>Near</label><br/>
+                    <input id="pspec-near" type="number" value=0.01>
+                    <br/>
+                    <label>Far</label><br/>
+                    <input id="pspec-far" type="number" value=100>
+                    <br/>
+                  </section>
+                  <section id="oblique-sec">
+                    <div>
+                      <label>Left</label><br/>
+                      <input id="oblique-left" type="number" value=-1>
+                      <br/>
+                      <label>Right</label><br/>
+                      <input id="oblique-right" type="number" value=1>
+                      <br/>
+                      <label>Bottom</label><br/>
+                      <input id="oblique-bottom" type="number" value=-1>
+                      <br/>
+                      <label>Top</label><br/>
+                      <input id="oblique-top" type="number" value=1>
+                      <br/>
+                    </div>
+                    <div>
+                      <label>Near</label><br/>
+                      <input id="oblique-near" type="number" value=0.01>
+                      <br/>
+                      <label>Far</label><br/>
+                      <input id="oblique-far" type="number" value=100>
+                      <br/>
+                      <label>XZ-degree</label><br/>
+                      <input id="oblique-xz" type="number" value=60>
+                      <br/>
+                      <label>YZ-degree</label><br/>
+                      <input id="oblique-yz" type="number" value=60>
+                      <br/>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div id="cam-container">
+                <h3>Camera Config</h3>
+                <section id="rad-cam">
+                  <label>Radius</label><br/>
+                  <input id="translate-cam" type="number" value=0 min=0>
+                </section> <br/>
+                <section id="rotate-cam">
+                  <label>Rotate X</label><br/>
+                  <input class="slider" id="rotate-cam0" type="range" min=0 max=360 value=0>
+                  <br/>
+                  <label>Rotate Y</label><br/>
+                  <input class="slider" id="rotate-cam1" type="range" min=0 max=360 value=0>
+                  <br/>
+                  <label>Rotate Z</label><br/>
+                  <input class="slider" id="rotate-cam2" type="range" min=0 max=360 value=0>
+                  <br/>
+                </section>
+              </div>
+            </div>
+        </div>
+        </section>
+        <section id="help" class="hide-menu">
+          <div class="help-container">
+            <h1>User Manual</h1>
+            <h3>Load objek</h3>
+            <ol>
+              <li>Pada ujung kiri atas, kliklah tombol load;</li>
+              <li>Pilihlah berkas JSON model yang bersesuaian, lalu klik load;</li>
+              <li>Model objek akan muncul di kanvas.</li>
+            </ol>
+          </div>
+        </section>
+      </div>
+    </div>
+    <button id="help-btn" onclick="toggleHelpMenu()">
+      Help ?
+    </button>
+    <script src="gl.js"></script>
+  </body>
+</html>
