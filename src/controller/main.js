@@ -7,7 +7,7 @@ class Observer {
         this.selected = null
         this.mode = MODE.NONE
         this.projMode = PROJ.ORTHO
-        this.objects = []
+        this.objects = [new Cube()]
         this.shading = []
 
         this.initCamConfig()

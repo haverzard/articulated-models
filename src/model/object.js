@@ -1,4 +1,4 @@
-class Object {
+class GeoObject {
     constructor() {
         this.id = ""
         this.TransformMatrix = getIdentityMat()

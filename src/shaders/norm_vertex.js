@@ -11,7 +11,7 @@ function norm2dVertex() {
 
     void main() {
       gl_Position = u_Projection * u_Model * u_View * vec4(position, 1.0);
-      v_Normal = u_Projection * u_Model * u_View * vec4(u_normal, 1.0);
+      v_Normal = u_Model * u_View * vec4(u_normal, 1.0);
     }
     `
 }

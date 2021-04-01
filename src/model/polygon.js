@@ -1,9 +1,16 @@
-class Polygon {
+class Polygon extends GeoObject {
     constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20) {
+        super()
         this.vertices = vertices
         this.color = color
         this.normal = normal
         this.shininess = shininess
+    }
+
+    applyTransformation() {
+        this.vertices = to3D(matMult(to4D(this.vertices), transpose(this.TransformMatrix)))
+        this.normal = to3D(matMult(to4D([this.normal]), transpose(this.TransformMatrix)))[0]
+        this.resetTransformMatrix()
     }
 
     draw(gl, shaderProgram) {
