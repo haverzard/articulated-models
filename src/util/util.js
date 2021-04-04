@@ -1,5 +1,5 @@
 const ASPECT_RATIO = 1
-const MODE = Object.freeze({ NONE: null, ROTATE: "rotate", TRANSLATE: "translate", SCALE: "scale" })
+const MODE = Object.freeze({ NONE: null, ROTATE: "rotate", TRANSLATE: "translate" })
 const PROJ = Object.freeze({ ORTHO: "ortho", PSPEC: "pspec", OBLIQUE: "oblique"})
 
 function normalizeX(canvas, x) {

@@ -43,5 +43,5 @@ function loadShader(gl, vertCoder, fragCoder) {
 }
 
 window.onload = () => {
-  observer = new Observer()
+  new Observer()
 }

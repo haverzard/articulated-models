@@ -1,24 +1,26 @@
-const modes = ["rotate", "translate", "scale"]
+const modes = ["rotate", "translate"]
 const proj = ["ortho", "pspec", "oblique"]
 const confirmations = ["apply", "cancel"]
 
 class Observer {
     constructor() {
+        observer = this
         this.selected = null
         this.mode = MODE.NONE
         this.projMode = PROJ.ORTHO
-        this.objects = [new Cube()]
+        this.objects = []
         this.shading = []
 
         this.initCamConfig()
         this.initProjection()
         this.initInputs()
         this.initButtons()
-        this.initTransforms()
         this.initUploader()
     
         this.main = new MainView(this)
-        this.applyProjection()
+        this._initObjectButtons()
+        this.drawObjects(this.main.gl, this.main.shaderProgram)
+        // this.applyProjection()
     }
 
     initCamConfig() {
@@ -46,11 +48,7 @@ class Observer {
     }
 
     initTransforms() {
-        this.transform = {
-            "rotate": [0,0,0],
-            "translate": [0,0,0],
-            "scale": 1,
-        }
+        this.transform = JSON.parse(JSON.stringify(this.selected.state))
     }
 
     initUploader() {
@@ -64,6 +62,19 @@ class Observer {
         modes.forEach((k) => {
             document.getElementById(k+"-btn").hidden = true
             document.getElementById(k+"-btn").onclick = () => {
+                document.getElementById(k+'-sec').hidden = false
+                if (this.selected.bound[k].activation.includes(true)) {
+                    this.selected.bound[k].activation.forEach((val, idx) => {
+                        let input = document.getElementById(k+'-input-'+(idx+1))
+                        input.hidden = !val
+                        if (val) {
+                            input.children[2].min = this.selected.bound[k].range[idx][0]
+                            input.children[2].max = this.selected.bound[k].range[idx][1]
+                            input.children[2].value = this.selected.state[k][idx]
+                            input.children[2].step = this.selected.bound[k].range[idx][2]
+                        }
+                    })
+                }
                 if (this.mode !== null) {
                     document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
                     document.getElementById(this.mode+"-sec").hidden = true
@@ -117,6 +128,7 @@ class Observer {
         })
         document.getElementById("apply-btn").onclick = () => {
             this.applyTransformation(true)
+            this.selected.state = this.transform
             this.initTransforms()
         }
         document.getElementById("cancel-btn").onclick = () => {
@@ -134,7 +146,7 @@ class Observer {
         document.getElementById("shading-btn").hidden = true
         document.getElementById("shading-btn").onclick = () => {
             if (this.selected !== null) {
-                this.shading[this.selected] = !this.shading[this.selected]
+                this.selected.shading = !this.selected.shading
             }
             document.getElementById("shading-btn").classList.toggle("selected-on")
             this.drawObjects(this.main.gl, this.main.shaderProgram)
@@ -143,28 +155,23 @@ class Observer {
 
     applyTransformation(perm=false) {
         // translate to origin
-        this.objects[this.selected]
-            .resetViewMatrix()
-            .addTranslation(neg(this.objects[this.selected].mid))
+        this.selected
+            .resetTransformMatrix()
+            .addTranslation(neg(this.selected.mid))
 
         // apply transformation
-        if (this.mode == MODE.ROTATE) {
-            this.objects[this.selected]
-                .addRotateX(this.transform["rotate"][0])
-                .addRotateY(this.transform["rotate"][1])
-                .addRotateZ(this.transform["rotate"][2])
-        } else if (this.mode == MODE.TRANSLATE) {
-            this.objects[this.selected].addTranslation(this.transform["translate"])
-        } else {
-            this.objects[this.selected].addScaling(this.transform["scale"])
-        }
+        this.selected
+            .addRotateX(this.transform["rotate"][0])
+            .addRotateY(this.transform["rotate"][1])
+            .addRotateZ(this.transform["rotate"][2])
+            .addTranslation(this.transform["translate"])
 
         // translate back
-        this.objects[this.selected].addTranslation(this.objects[this.selected].mid)
+        this.selected.addTranslation(this.selected.mid)
 
         // apply it to the object so it's permanent
         if (perm) {
-            this.objects[this.selected].applyTransformation()
+            // this.selected.applyTransformation()
             this.resetTrf()
             document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
             this.mode = MODE.NONE
@@ -233,12 +240,6 @@ class Observer {
         modes.forEach((k) => {
             document.getElementById(k+"-sec").hidden = true
         })
-        modes.slice(0, 2).forEach((k) => {
-            for (let i = 0; i < 3; i++) {
-                document.getElementById(k+"-"+i).value = 0
-            }
-        })
-        document.getElementById("scale").value = 0
     }
 
     resetProjs() {
@@ -270,8 +271,6 @@ class Observer {
             })
         })
 
-        document.getElementById("scale").value = 0
-
     }
 
     resetCam() {
@@ -296,11 +295,6 @@ class Observer {
                 }
             }
         })
-
-        document.getElementById("scale").oninput = (e) => {
-            this.transform["scale"] = parseFloat(e.target.value)
-            this.applyTransformation()
-        }
 
         proj.forEach((p) => {
             document.getElementById(p+'-near').oninput = (e) => {
@@ -406,22 +400,35 @@ class Observer {
         document.getElementById('btn-container').innerHTML = ""
         for (let i = 0; i < this.objects.length; i++) {
             var button = document.createElement("button")
-            button.textContent = "Object "+i
+            button.textContent = this.objects[i].id
             document.getElementById('btn-container').appendChild(button)
             button.onclick = () => {
-                if (this.selected !== null) {
-                    document.getElementById('btn-container')
-                        .children[this.selected]
-                        .classList.toggle("selected", false)
-                } else {
-                    modes.forEach((k) => {
-                        document.getElementById(k+'-btn').hidden = false
-                    })
-                    document.getElementById('shading-btn').hidden = false
-                }
-                this.pointToObject(i)
-                document.getElementById('btn-container').children[i].classList.toggle("selected")
-
+                document.getElementById('btn-container2').innerHTML = ""
+                this.objects[i].PARTS.forEach((k, j) => {
+                    var button2 = document.createElement("button")
+                    button2.textContent = k
+                    document.getElementById('btn-container2').appendChild(button2)
+        
+                    button2.onclick = () => {
+                        let obj = this.objects[i].parts[k]
+                        if (this.selected !== null) {
+                            var children = document.getElementById('btn-container2').children
+                            for (let cidx = 0; cidx < children.length; cidx++) {
+                                document.getElementById('btn-container2').children[cidx].classList.toggle("selected", false)
+                            }
+                        }
+                        modes.forEach((mode) => {
+                            if (obj.bound[mode].activation.includes(true)) {
+                                document.getElementById(mode+'-btn').hidden = false
+                            } else {
+                                document.getElementById(mode+'-btn').hidden = true
+                            }
+                        })
+                        document.getElementById('shading-btn').hidden = false
+                        this.pointToObject(obj)
+                        document.getElementById('btn-container2').children[j].classList.toggle("selected")
+                    }
+                })
             }
         }
     }
@@ -448,18 +455,16 @@ class Observer {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
         this.objects.forEach((obj, i) => {
-            gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_shading"), this.shading[i])
             obj.draw(gl, shaderProgram)
         })
     }
 
-    pointToObject(idx) {
+    pointToObject(obj) {
         // auto cancel transformation
-        if (this.selected != idx && this.mode) {
-            this.initTransforms()
+        if (this.selected != obj && this.mode) {
             this.resetTrf()
-
-            this.objects[this.selected].resetViewMatrix()
+            this.initTransforms()
+            this.applyTransformation()
             this.drawObjects(this.main.gl, this.main.shaderProgram)
 
             document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
@@ -468,8 +473,9 @@ class Observer {
                 document.getElementById(k+'-btn').hidden = true
             })
         }
-        document.getElementById("shading-btn").classList.toggle("selected-on", this.shading[idx])
-        this.selected = idx
+        document.getElementById("shading-btn").classList.toggle("selected-on", obj.shading)
+        this.selected = obj
+        this.initTransforms()
     }
 
 }

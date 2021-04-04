@@ -72,7 +72,7 @@ body {
   display: flex;
 }
 
-#btn-container {
+#btn-container, #btn-container2 {
   margin-bottom: 50px;
 }
 

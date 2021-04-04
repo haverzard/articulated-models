@@ -1,3 +1,5 @@
+const I = getIdentityMat()
+
 function copyMat(mat) {
     var newMat = []
     for (let i = 0; i < mat.length; i++) {
