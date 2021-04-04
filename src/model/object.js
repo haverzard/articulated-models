@@ -20,7 +20,7 @@ class GeoObject {
     }
 
     addSibling(sibling) {
-        obj = this
+        let obj = this
         while (obj.sibling) {
             obj = obj.sibling
         }
@@ -29,7 +29,7 @@ class GeoObject {
     }
 
     addChild(child) {
-        obj = this
+        let obj = this
         if (!obj.child) {
             obj.child = child
             return;
