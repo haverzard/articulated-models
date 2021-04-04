@@ -8,7 +8,7 @@ class Observer {
         this.selected = null
         this.mode = MODE.NONE
         this.projMode = PROJ.ORTHO
-        this.objects = []
+        this.objects = [new MinecraftPigModel()]
         this.shading = []
 
         this.initCamConfig()
