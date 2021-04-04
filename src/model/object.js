@@ -47,6 +47,11 @@ class GeoObject {
         return this
     }
 
+    addScaling3D(scale) {
+        this.TransformMatrix = matMult(getSMat(scale), this.TransformMatrix)
+        return this
+    }
+
     addTranslation(translate) {
         this.TransformMatrix = matMult(getTMat(translate), this.TransformMatrix)
         return this
