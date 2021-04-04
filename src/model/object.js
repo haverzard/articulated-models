@@ -6,6 +6,21 @@ class GeoObject {
         this.TransformMatrix = getIdentityMat()
         this.sibling = null
         this.child = null
+        this.shading = true
+        this.state = {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+        }
+        this.bound = {
+            translate: {
+                activation: [false, false, false],
+                range: [],
+            },
+            rotate: {
+                activation: [false, false, false],
+                range: [],
+            },
+        }
     }
 
     setColor(color) {
