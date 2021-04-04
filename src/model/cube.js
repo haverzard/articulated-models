@@ -1,17 +1,18 @@
 class Cube extends GeoObject {
-    constructor(data = null, size = 1) {
+    constructor(data = null, size = 1, color=[0,1,0], shininess=20) {
         super()
         this.FACES = ["front", "behind", "left", "right", "top", "bottom"]
+        this.mid = [0, 0, 0]
         // load from ext file
         if (data) {
             this._toShape(data)
             return
         } else {
-            this._generate(size)
+            this._generate(size, color, shininess)
         }
     }
 
-    _generate(size) {
+    _generate(size, color, shininess) {
         this.faces = {}
         this.FACES.forEach((v) => {
             this.faces[v] = new Polygon([
@@ -19,7 +20,7 @@ class Cube extends GeoObject {
                 [ size / 2,  size / 2, size / 2],
                 [-size / 2,  size / 2, size / 2],
                 [-size / 2, -size / 2, size / 2]
-            ], [0,1,0])
+            ], color, [0, 0, 1], shininess)
         })
 
         this.faces["top"].addRotateX(90)
@@ -34,6 +35,7 @@ class Cube extends GeoObject {
     }
 
     draw(gl, shaderProgram) { // still placeholder
+        gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_shading"), this.shading)
         setMatTransform(gl, shaderProgram, "u_View", this.TransformMatrix)
         this.FACES.forEach((k) => {
             this.faces[k].draw(gl, shaderProgram)

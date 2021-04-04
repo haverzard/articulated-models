@@ -7,11 +7,13 @@
     <title>Articulated Model WebGL</title>
     <link href="screen.css" rel="stylesheet" />
     <link href="help.css" rel="stylesheet" />
+    <script src="util/articulated.js"></script>
     <script src="util/matrix.js"></script>
     <script src="util/util.js"></script>
     <script src="view/main.js"></script>
     <script src="model/object.js"></script>
     <script src="model/cube.js"></script>
+    <script src="model/pig.js"></script>
     <script src="model/polygon.js"></script>
     <script src="controller/main.js"></script>
     <script src="shaders/norm_vertex.js"></script>
@@ -29,37 +31,47 @@
           <div id="left-side">
             <div id="btn-container">
             </div>
+            <div id="btn-container2">
+            </div>
             <div id="mode-container">
               <button id="rotate-btn">Rotate</button>
               <button id="translate-btn">Translate</button>
-              <button id="scale-btn">Scale</button>
               <button id="shading-btn">Shading</button>
             </div>
             <div id="trf-container">
               <section id="rotate-sec">
-                <label>Rotate X</label><br/>
-                <input class="slider" id="rotate-0" type="range" min=0 max=360 value=0>
-                <br/>
-                <label>Rotate Y</label><br/>
-                <input class="slider" id="rotate-1" type="range" min=0 max=360 value=0>
-                <br/>
-                <label>Rotate Z</label><br/>
-                <input class="slider" id="rotate-2" type="range" min=0 max=360 value=0>
-                <br/>
+                <div id="rotate-input-1">
+                  <label>Rotate X</label><br/>
+                  <input class="slider" id="rotate-0" type="range" min=0 max=360 value=0>
+                  <br/>
+                </div>
+                <div id="rotate-input-2">
+                  <label>Rotate Y</label><br/>
+                  <input class="slider" id="rotate-1" type="range" min=0 max=360 value=0>
+                  <br/>
+                </div>
+                <div id="rotate-input-3">
+                  <label>Rotate Z</label><br/>
+                  <input class="slider" id="rotate-2" type="range" min=0 max=360 value=0>
+                  <br/>
+                </div>
               </section>
               <section id="translate-sec">
-                <label>Translate X</label><br/>
-                <input id="translate-0" type="number" value=0>
-                <br/>
-                <label>Translate Y</label><br/>
-                <input id="translate-1" type="number" value=0>
-                <br/>
-                <label>Translate Z</label><br/>
-                <input id="translate-2" type="number" value=0>
-              </section>
-              <section id="scale-sec">
-                <label>Scale</label><br/>
-                <input id="scale" type="number" value=0>
+                <div id="translate-input-1">
+                  <label>Translate X</label><br/>
+                  <input id="translate-0" type="range" value=0>
+                  <br/>
+                </div>
+                <div id="translate-input-2">
+                  <label>Translate Y</label><br/>
+                  <input id="translate-1" type="range" value=0>
+                  <br/>
+                </div>
+                <div id="translate-input-3">
+                  <label>Translate Z</label><br/>
+                  <input id="translate-2" type="range" value=0>
+                  <br/>
+                </div>
               </section>
             </div>
             <div id="confirm-container">

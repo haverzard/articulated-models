@@ -1,9 +1,26 @@
 class GeoObject {
     constructor() {
+        this.PARTS = []
+        this.main = ""
         this.id = ""
         this.TransformMatrix = getIdentityMat()
         this.sibling = null
         this.child = null
+        this.shading = true
+        this.state = {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+        }
+        this.bound = {
+            translate: {
+                activation: [false, false, false],
+                range: [],
+            },
+            rotate: {
+                activation: [false, false, false],
+                range: [],
+            },
+        }
     }
 
     setColor(color) {
@@ -20,7 +37,7 @@ class GeoObject {
     }
 
     addSibling(sibling) {
-        obj = this
+        let obj = this
         while (obj.sibling) {
             obj = obj.sibling
         }
@@ -29,7 +46,7 @@ class GeoObject {
     }
 
     addChild(child) {
-        obj = this
+        let obj = this
         if (!obj.child) {
             obj.child = child
             return;
@@ -44,6 +61,11 @@ class GeoObject {
 
     addScaling(scale) {
         this.TransformMatrix = matMult(getSMat(Array(3).fill(scale)), this.TransformMatrix)
+        return this
+    }
+
+    addScaling3D(scale) {
+        this.TransformMatrix = matMult(getSMat(scale), this.TransformMatrix)
         return this
     }
 
