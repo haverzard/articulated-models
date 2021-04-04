@@ -1,5 +1,7 @@
 class GeoObject {
     constructor() {
+        this.PARTS = []
+        this.main = ""
         this.id = ""
         this.TransformMatrix = getIdentityMat()
         this.sibling = null
