@@ -7,14 +7,18 @@ class GeoObject {
         this.sibling = null
         this.child = null
         this.shading = true
+        // init model transformation state
+        // indexing: [x, y, z]
         this.state = {
             translate: [0, 0, 0],
             rotate: [0, 0, 0],
         }
+        // init boundary
+        // indexing: [x, y, z]
         this.bound = {
             translate: {
-                activation: [false, false, false],
-                range: [],
+                activation: [false, false, false], // set false to disable
+                range: [], // init range for every axis [min, max, step]
             },
             rotate: {
                 activation: [false, false, false],
