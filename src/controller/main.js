@@ -67,6 +67,8 @@ class Observer {
             document.getElementById(k+"-btn").hidden = true
             document.getElementById(k+"-btn").onclick = () => {
                 document.getElementById(k+'-sec').hidden = false
+                this.initTransforms()
+                this.resetTrf()
                 if (this.selected.bound[k].activation.includes(true)) {
                     this.selected.bound[k].activation.forEach((val, idx) => {
                         let input = document.getElementById(k+'-input-'+(idx+1))
