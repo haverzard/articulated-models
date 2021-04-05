@@ -47,20 +47,26 @@ class Cube extends GeoObject {
         this.faces = []
         this.FACES.forEach((k) => {
             let part = data[k]
-            this.faces[k] = new Shape(part["vertices"], part["color"], part["normal"], part["shininess"])
+            this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"])
         })
+        this.id = data["id"]
+        this.bound = data["bound"]
+        this.mid = data["mid"]
     }
 
     parse() {
         let parsed = {}
         this.FACES.forEach((k) => {
-            parsed[k] = new Shape(
-                to3D(matMult(to4D(this.faces[k].vertices), transpose(this.ViewMatrix))),
+            parsed[k] = new Polygon(
+                to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix))),
                 this.faces[k].color,
-                to3D(matMult(to4D([this.faces[k].normal]), transpose(this.ViewMatrix)))[0],
+                to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0],
                 this.faces[k].shininess,
             )
         })
+        parsed["mid"] = this.mid
+        parsed["id"] = this.id
+        parsed["bound"] = this.bound
         return parsed
     }
 

@@ -6,10 +6,18 @@ class Observer {
     constructor() {
         observer = this
         this.selected = null
+        this.objects = []
         this.mode = MODE.NONE
         this.projMode = PROJ.ORTHO
-        this.objects = [new MinecraftPigModel()]
-        this.shading = []
+
+        // TODO: DELETE LATER
+        // model saver
+        // var a = document.createElement('a')
+        // a.download = 'model.json'
+        // a.href = window.URL.createObjectURL(
+        //   new Blob([JSON.stringify([(new MinecraftPigModel()).parse()], null, 2)], { type: 'application/json' }),
+        // )
+        // a.click()
 
         this.initCamConfig()
         this.initProjection()
@@ -18,7 +26,6 @@ class Observer {
         this.initUploader()
     
         this.main = new MainView(this)
-        this._initObjectButtons()
         this.drawObjects(this.main.gl, this.main.shaderProgram)
         // this.applyProjection()
     }
@@ -442,16 +449,11 @@ class Observer {
     initObjects(data) {
         this.objects = []
         data.forEach((obj) => {
-            if (obj["type"] == "triangular_pyramid") {
-                this.objects.push(new HollowPyramid(obj))
-            } else if (obj["type"] == "hexagonal_prism") {
-                this.objects.push(new HollowHexagonPrism(obj))
-            } else if (obj["type"] == "cube")  {
-                this.objects.push(new HollowCube(obj))
+            if (obj["id"].includes("Pig")) {
+                this.objects.push(new MinecraftPigModel(obj))
             }
-            this.shading.push(true)
         })
-        this._resetTransform()
+        // this._resetTransform()
         this._initObjectButtons()
         this.drawObjects(this.main.gl, this.main.shaderProgram)
     }

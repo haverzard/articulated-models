@@ -6,12 +6,11 @@ class MinecraftPigModel extends GeoObject {
         this.main = "body"
         // load from ext file
         if (data) {
-            // this._toShape(data)
+            this._toShape(data)
             return
-        } else {
-            this._generate()
-            this.genKeyFrames()
         }
+        this._generate()
+        this.genKeyFrames()
     }
 
     _generate() {
@@ -174,23 +173,28 @@ class MinecraftPigModel extends GeoObject {
     }
 
     _toShape(data) {
-        this.faces = []
-        this.FACES.forEach((k) => {
-            let part = data[k]
-            this.faces[k] = new Shape(part["vertices"], part["color"], part["normal"], part["shininess"])
+        this.parts = {}
+        this.PARTS.forEach((k) => {
+            this.parts[k] = new Cube(data["parts"][k])
         })
+        this.id = data["id"]
+        this.keyframes = data["keyframes"]
+
+        this.parts["body"].addChild(this.parts["head"])
+        this.parts["body"].addChild(this.parts["right-arm"])
+        this.parts["body"].addChild(this.parts["left-arm"])
+        this.parts["body"].addChild(this.parts["right-leg"])
+        this.parts["body"].addChild(this.parts["left-leg"])
+        this.parts["head"].addChild(this.parts["nose"])
     }
 
     parse() {
-        let parsed = {}
-        this.FACES.forEach((k) => {
-            parsed[k] = new Shape(
-                to3D(matMult(to4D(this.faces[k].vertices), transpose(this.ViewMatrix))),
-                this.faces[k].color,
-                to3D(matMult(to4D([this.faces[k].normal]), transpose(this.ViewMatrix)))[0],
-                this.faces[k].shininess,
-            )
+        let parsed = {"parts": {}}
+        this.PARTS.forEach((k) => {
+            parsed["parts"][k] = this.parts[k].parse()
         })
+        parsed["id"] = this.id
+        parsed["keyframes"] = this.keyframes
         return parsed
     }
 
