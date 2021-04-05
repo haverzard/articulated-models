@@ -101,4 +101,58 @@ class GeoObject {
     applyTransformation() {
         return
     }
+
+    animate(gl, shaderProgram, frame) {
+        this.PARTS.forEach((partIdx) => {
+            let keyframes = this.keyframes[partIdx]
+            if (keyframes) {
+                let idx = null
+                for (let j = 0; j < keyframes.length; j++) {
+                    // if keyframe is not within frame
+                    if (Math.ceil(keyframes[j][0] * FRAMES / 100) >= frame) {
+                        idx = j
+                        break
+                    }
+                }
+                // if there is no keyframe or keyframe is first keyframe
+                if (idx === null || idx == 0) {
+                    
+                } else {
+                    // the frame where my before keyframe is started
+                    let framesA = Math.ceil(FRAMES * keyframes[idx-1][0] / 100)
+                    // the frame where my keyframe is started
+                    let framesB = Math.ceil(FRAMES * keyframes[idx][0] / 100)
+                    let delta = framesB - framesA
+                    // init delta state
+                    let deltaState = {
+                        translate: [0, 0, 0],
+                        rotate: [0, 0, 0],
+                    }
+                    const keys = ["translate", "rotate"]
+                    // calculate delta state
+                    for (let j = 0; j < 3; j++) {
+                        keys.forEach((k) => {
+                            deltaState[k][j] = keyframes[idx-1][1][k][j] + (keyframes[idx][1][k][j] - keyframes[idx-1][1][k][j]) * (frame - framesA) / delta
+                        })
+                    }
+                    // translate to origin
+                    this.parts[partIdx]
+                        .resetTransformMatrix()
+                        .addTranslation(neg(this.parts[partIdx].mid))
+    
+                    // apply transformation
+                    this.parts[partIdx]
+                        .addRotateX(deltaState["rotate"][0])
+                        .addRotateY(deltaState["rotate"][1])
+                        .addRotateZ(deltaState["rotate"][2])
+                        .addTranslation(deltaState["translate"])
+                    // translate back
+                    this.parts[partIdx].addTranslation(this.parts[partIdx].mid)
+                    gl.clearColor(1.0, 1.0, 1.0, 1.0)
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                    this.draw(gl, shaderProgram)
+                }    
+            }
+        })
+    }
 }
