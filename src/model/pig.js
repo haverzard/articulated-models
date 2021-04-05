@@ -98,11 +98,6 @@ class MinecraftPigModel extends GeoObject {
         })
     }
 
-    draw(gl, shaderProgram) {
-        setMatTransform(gl, shaderProgram, "u_View", this.TransformMatrix)
-        traverse(this.parts[this.main], I)
-    }
-
     parse() {
         let parsed = {}
         this.FACES.forEach((k) => {
