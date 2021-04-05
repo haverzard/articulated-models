@@ -72,6 +72,10 @@ body {
   display: flex;
 }
 
+#model-transformation > div {
+  display: flex;
+}
+
 #btn-container, #btn-container2 {
   margin-bottom: 50px;
 }
