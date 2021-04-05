@@ -59,6 +59,10 @@ class Observer {
     }
 
     initButtons() {
+        document.getElementById("animate-btn").onclick = () => {
+            this.animateObjects(this.main.gl, this.main.shaderProgram)
+        }
+
         modes.forEach((k) => {
             document.getElementById(k+"-btn").hidden = true
             document.getElementById(k+"-btn").onclick = () => {
@@ -457,6 +461,26 @@ class Observer {
         this.objects.forEach((obj, i) => {
             obj.draw(gl, shaderProgram)
         })
+    }
+
+    animateObjects(gl, shaderProgram) {
+        gl.clearColor(1.0, 1.0, 1.0, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+        document.getElementById("model-transformation").style.display = "none"
+        document.getElementById("animate-btn").disabled = true
+
+        let i = 0
+        let hehe = setInterval(() => {
+            this.objects.forEach((obj) => {
+                obj.animate(gl, shaderProgram, i)
+            })
+            i += 1
+            if (i == FRAMES+1) {
+                document.getElementById("model-transformation").style.display = "initial"
+                document.getElementById("animate-btn").disabled = false
+                clearInterval(hehe)
+            }
+        }, 100)
     }
 
     pointToObject(obj) {
