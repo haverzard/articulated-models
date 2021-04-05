@@ -10,6 +10,7 @@ class MinecraftPigModel extends GeoObject {
             return
         } else {
             this._generate()
+            this.genKeyFrames()
         }
     }
 
@@ -90,17 +91,94 @@ class MinecraftPigModel extends GeoObject {
         this.parts["head"].addChild(this.parts["nose"])
     }
 
+    genKeyFrames() {
+        this.keyframes = {
+            "body": [
+                [0, {
+                    translate: [0, 0, -1],
+                    rotate: [0, -180, 0],
+                }],
+                [50, {
+                    translate: [0, 0, 2],
+                    rotate: [0, -180, 0],
+                }],
+                [55, {
+                    translate: [0, 0, 2],
+                    rotate: [0, -90, 0],
+                }],
+                [100, {
+                    translate: [2, 0, 2],
+                    rotate: [0, -90, 0],
+                }]
+            ],
+            "head": [
+                [0, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
+                }]
+            ]
+        }
+        for (let i = 0; i <= 4; i++) {
+            this.keyframes["head"].push(
+                [5 + i * 10, {
+                    translate: [0, 0, 0],
+                    rotate: [-30 * (1 - (i % 2) * 2), 0, 0],
+                }]
+            )
+        }
+        this.keyframes["head"].push(
+            [50, {
+                translate: [0, 0, 0],
+                rotate: [0, 0, 0],
+            }]
+        )
+        
+        const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
+        keys.forEach((k, mod) => {
+            mod = mod % 2
+            this.keyframes[k] = [
+                [0, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
+                }]
+            ]
+            for (let i = 0; i <= 9; i++) {
+                this.keyframes[k].push(
+                    [2.5 + i * 5, {
+                        translate: [0, 0, 0],
+                        rotate: [60 * (1 - mod * 2) * (1 - (i % 2) * 2), 0, 0],
+                    }]
+                )
+            }
+            this.keyframes[k].push(
+                [45, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
+                }]
+            )
+            this.keyframes[k].push(
+                [55, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
+                }]
+            )
+            for (let i = 0; i <= 9; i++) {
+                this.keyframes[k].push(
+                    [55 + i * 5, {
+                        translate: [0, 0, 0],
+                        rotate: [60 * (1 - mod * 2) * (1 - (i % 2) * 2), 0, 0],
+                    }]
+                )
+            }
+        })
+    }
+
     _toShape(data) {
         this.faces = []
         this.FACES.forEach((k) => {
             let part = data[k]
             this.faces[k] = new Shape(part["vertices"], part["color"], part["normal"], part["shininess"])
         })
-    }
-
-    draw(gl, shaderProgram) {
-        setMatTransform(gl, shaderProgram, "u_View", this.TransformMatrix)
-        traverse(this.parts[this.main], I)
     }
 
     parse() {
