@@ -1,10 +1,11 @@
 class Polygon extends GeoObject {
-    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20) {
+    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20, texCoord=Array(4).fill([0,0,0])) {
         super()
         this.vertices = vertices
         this.color = color
         this.normal = normal
         this.shininess = shininess
+        this.texCoord = texCoord
     }
 
     applyTransformation() {
@@ -16,9 +17,11 @@ class Polygon extends GeoObject {
     draw(gl, shaderProgram) {
         // create buffer for vertex, color, & depth - for shaders
         var vertex_buffer = createBuffer(gl, this.vertices.flat())
+        var tex_buffer = createBuffer(gl, this.texCoord.flat())
 
         // bind buffer to attribute in shaders
-        bindBuffer(gl, shaderProgram, vertex_buffer, 3, 'position')
+        bindBuffer(gl, shaderProgram, vertex_buffer, 3, 'vPosition')
+        bindBuffer(gl, shaderProgram, tex_buffer, 2, 'vTexCoord')
         setVector3D(gl, shaderProgram, "u_color", this.color)
         setVector3D(gl, shaderProgram, "u_normal", this.normal)
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_shininess"), this.shininess)
