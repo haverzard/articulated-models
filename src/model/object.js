@@ -148,12 +148,13 @@ class GeoObject {
                         .addTranslation(deltaState["translate"])
                     // translate back
                     this.parts[partIdx].addTranslation(this.parts[partIdx].mid)
-                    gl.clearColor(1.0, 1.0, 1.0, 1.0)
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                    this.draw(gl, shaderProgram)
                 }    
             }
         })
+        // draw after everything is set
+        gl.clearColor(1.0, 1.0, 1.0, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+        this.draw(gl, shaderProgram)
     }
 
     draw(gl, shaderProgram) {
