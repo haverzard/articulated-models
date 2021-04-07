@@ -35,7 +35,8 @@ class Cube extends GeoObject {
         })
     }
 
-    draw(gl, shaderProgram) { // still placeholder
+    draw(gl, shaderProgram) {
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_texture"), this.texture)
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_shading"), this.shading)
         setMatTransform(gl, shaderProgram, "u_View", this.TransformMatrix)
         this.FACES.forEach((k) => {

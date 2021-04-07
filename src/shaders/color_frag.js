@@ -8,6 +8,7 @@ function colorFrag() {
     uniform highp vec3 u_viewer;
     uniform highp vec3 u_light;
     uniform bool u_shading;
+    uniform bool u_texture;
     uniform float u_shininess;
     uniform int u_TextureMode;
 
@@ -30,7 +31,7 @@ function colorFrag() {
         highp vec3 phong = u_ambient + (dir * Id + spec * Is) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
 
         finalColor = vec4(u_color * phong, 1.0);
-        if (u_TextureMode == 1) {
+        if (u_texture && u_TextureMode == 1) {
           finalColor = finalColor * texture2D(texture, fTexCoord);
         }
         gl_FragColor = finalColor;

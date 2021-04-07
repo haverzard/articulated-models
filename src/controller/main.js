@@ -166,6 +166,14 @@ class Observer {
             document.getElementById("shading-btn").classList.toggle("selected-on")
             this.drawObjects(this.main.gl, this.main.shaderProgram)
         }
+        document.getElementById("texture-btn").hidden = true
+        document.getElementById("texture-btn").onclick = () => {
+            if (this.selected !== null) {
+                this.selected.texture = !this.selected.texture
+            }
+            document.getElementById("texture-btn").classList.toggle("selected-on")
+            this.drawObjects(this.main.gl, this.main.shaderProgram)
+        }
     }
 
     applyTransformation(perm=false) {
@@ -440,6 +448,7 @@ class Observer {
                             }
                         })
                         document.getElementById('shading-btn').hidden = false
+                        document.getElementById('texture-btn').hidden = false
                         this.pointToObject(obj)
                         document.getElementById('btn-container2').children[j].classList.toggle("selected")
                     }
@@ -504,6 +513,7 @@ class Observer {
             })
         }
         document.getElementById("shading-btn").classList.toggle("selected-on", obj.shading)
+        document.getElementById("texture-btn").classList.toggle("selected-on", obj.texture)
         this.selected = obj
         this.initTransforms()
     }
