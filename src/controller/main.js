@@ -8,7 +8,7 @@ class Observer {
         this.selected = null
         this.objects = []
         this.mode = MODE.NONE
-        this.projMode = PROJ.ORTHO
+        this.projMode = PROJ.NONE
 
         // TODO: DELETE LATER
         // model saver
@@ -64,6 +64,7 @@ class Observer {
         var fileUploader = document.getElementById('file-uploader')
         fileUploader.onchange = (e) => {
           this.__loadFromFile(e.target.files[0])
+          fileUploader.value = ""
         }
     }
 
@@ -106,23 +107,23 @@ class Observer {
         })
 
         proj.forEach((m) => {
-            if (m === PROJ.OBLIQUE) {
+            if (m !== PROJ.PSPEC) {
                 document.getElementById(m+'-sec').childNodes.forEach((child) => {
                     child.hidden = true
                 })
-            } else if (m === PROJ.PSPEC) {
-                document.getElementById(m+'-sec').hidden = true
             } else {
-                document.getElementById(m+'-btn').classList.toggle("selected")
+                document.getElementById(m+'-sec').hidden = true
             }
             document.getElementById(m+"-btn").onclick = () => {
-                document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
-                if (this.projMode !== PROJ.PSPEC) {
-                    document.getElementById(this.projMode+'-sec').childNodes.forEach((child) => {
-                        child.hidden = true
-                    })
-                } else {
-                    document.getElementById(this.projMode+'-sec').hidden = true
+                if (this.projMode) {
+                    document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
+                    if (this.projMode !== PROJ.PSPEC) {
+                        document.getElementById(this.projMode+'-sec').childNodes.forEach((child) => {
+                            child.hidden = true
+                        })
+                    } else {
+                        document.getElementById(this.projMode+'-sec').hidden = true
+                    }
                 }
 
                 this.projMode = m
@@ -151,8 +152,8 @@ class Observer {
             this.applyTransformation(true)
         }
         document.getElementById("reset-btn").onclick = () => {
-            document.getElementById(this.projMode+'-btn').classList.toggle("selected")
-            this.projMode = PROJ.ORTHO
+            if (this.projMode) document.getElementById(this.projMode+'-btn').classList.toggle("selected")
+            this.projMode = PROJ.NONE
             this.initProjection()
             this.applyProjection()
             this.resetProjs()
@@ -210,7 +211,7 @@ class Observer {
 
     applyProjection() {
         // get projection matrix
-        let projectionMatrix
+        let projectionMatrix = I
         if (this.projMode === PROJ.ORTHO) { 
             projectionMatrix = getOrthoMat(
                 this.projection["left"],
@@ -227,7 +228,7 @@ class Observer {
                 this.projection["near"],
                 this.projection["far"]
             )
-        } else {
+        } else if (this.projMode === PROJ.OBLIQUE) {
             projectionMatrix = getObliqueMat(
                 this.projection["left"],
                 this.projection["right"],
@@ -278,9 +279,8 @@ class Observer {
                 t = ["fovy", "aspect", "near", "far"]
             } else {
                 document.getElementById(m+'-sec').childNodes.forEach((child) => {
-                    child.hidden = false
+                    child.hidden = true
                 })
-                document.getElementById(m+'-btn').classList.toggle("selected")
                 t = ["left", "right", "top", "bottom", "near", "far"]
             }
             t.forEach((e) => {
@@ -464,7 +464,6 @@ class Observer {
                 this.objects.push(new MinecraftPigModel(obj))
             }
         })
-        // this._resetTransform()
         this._initObjectButtons()
         this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
@@ -478,6 +477,33 @@ class Observer {
         })
     }
 
+    initAnimation() {
+        this.temp = {
+            "radius": this.camConfig["radius"],
+            "yRot": this.camConfig["yRot"],
+        }
+        document.getElementById("pspec-btn").onclick()
+        document.getElementById("translate-cam").value = 7
+        document.getElementById("rotate-cam1").value = 350
+        this.camConfig["radius"] = 7
+        this.camConfig["yRot"] = 350
+        this.applyCamConfig()
+        this.applyProjection()
+    }
+
+    cleanupAnimation() {
+        document.getElementById("translate-cam").value = this.temp.radius
+        document.getElementById("rotate-cam1").value = this.temp.yRot
+        this.camConfig["radius"] = this.temp.radius
+        this.camConfig["yRot"] = this.temp.yRot
+        
+        if (this.projMode) document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
+        this.projMode = PROJ.NONE
+        this.applyCamConfig()
+        this.applyProjection()
+        this.resetProjs()
+    }
+
     animateObjects(gl, shaderProgram) {
         gl.clearColor(1.0, 1.0, 1.0, 1.0)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -485,6 +511,7 @@ class Observer {
         document.getElementById("animate-btn").disabled = true
 
         let i = 0
+        this.initAnimation()
         let hehe = setInterval(() => {
             this.objects.forEach((obj) => {
                 obj.animate(gl, shaderProgram, i)
@@ -494,6 +521,21 @@ class Observer {
                 document.getElementById("model-transformation").style.display = "initial"
                 document.getElementById("animate-btn").disabled = false
                 clearInterval(hehe)
+                this.objects.forEach((obj) => {
+                    obj.reset()
+                })
+                this.cleanupAnimation()
+                if (this.selected) {
+                    this.resetTrf()
+                    this.initTransforms()
+
+                    document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
+                    this.mode = MODE.NONE
+                    confirmations.forEach((k) => {
+                        document.getElementById(k+'-btn').hidden = true
+                    })
+                }
+                this.drawObjects(gl, shaderProgram)
             }
         }, 100)
     }
