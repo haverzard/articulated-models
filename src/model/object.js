@@ -7,6 +7,7 @@ class GeoObject {
         this.sibling = null
         this.child = null
         this.shading = true
+        this.texture = true
         // init model transformation state
         // indexing: [x, y, z]
         this.state = {

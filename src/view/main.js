@@ -26,8 +26,8 @@ class MainView {
         setMatTransform(this.gl, this.shaderProgram, "u_Projection", this.ProjectionMatrix)
         setMatTransform(this.gl, this.shaderProgram, "u_Model", this.ModelMatrix)
         setVector3D(this.gl, this.shaderProgram, "u_ambient", [0.4, 0.4, 0.4])
-        setVector3D(this.gl, this.shaderProgram, "u_viewer", [-1, -1, 1])
-        setVector3D(this.gl, this.shaderProgram, "u_light", [-1, -1, 1])
+        setVector3D(this.gl, this.shaderProgram, "u_viewer", [-500, 500, -10])
+        setVector3D(this.gl, this.shaderProgram, "u_light", [-500, 500, -10])
         this.gl.uniform1f(this.gl.getUniformLocation(this.shaderProgram, "u_shading"), true)
     }
 

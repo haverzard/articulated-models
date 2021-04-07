@@ -1,5 +1,7 @@
 var observer
 
+var textures = {}
+
 function setMatTransform(gl, shaderProgram, attr, mat) {
   gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, attr), false, transpose(mat).flat())
 }
@@ -20,6 +22,29 @@ function bindBuffer(gl, shaderProgram, buffer, dimension, attrName, bufferType=g
   var attr = gl.getAttribLocation(shaderProgram, attrName)
   gl.vertexAttribPointer(attr, dimension, dataType, false, 0, 0)
   gl.enableVertexAttribArray(attr)
+}
+
+function configureTexture(gl, url, id) {
+  // generate image
+  var image = new Image();
+  image.src = url
+  requestCORSIfNotSameOrigin(image, url);
+  
+  var texture = gl.createTexture();
+  textures[id] = texture
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  image.onload = () => {
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+      // gpu support power of 2 only by default
+      gl.generateMipmap(gl.TEXTURE_2D);
+    } else {
+      // use padding instead by using wrapping to clamp to edge
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+  }
 }
 
 function loadShader(gl, vertCoder, fragCoder) {
