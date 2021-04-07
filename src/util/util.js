@@ -11,6 +11,18 @@ function normalizeY(canvas, y) {
     return (-y * 2) / canvas.height + 1
 }
 
+function isPowerOf2(n) {
+    if (n == 0) return false;
+    let r = Math.log(n) / Math.log(2)
+    return Math.ceil(r) == Math.floor(r)
+}
+
+function requestCORSIfNotSameOrigin(image, url) {
+    if ((new URL(url, window.location.href)).origin !== window.location.origin) {
+        image.crossOrigin = "";
+    }
+}
+
 function getPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
