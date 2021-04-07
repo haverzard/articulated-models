@@ -64,7 +64,7 @@ class MinecraftPigModel extends GeoObject {
             if (Math.floor(i / 2)) z = 0.35
             if (i % 2) x = -x
             this.parts[k].addScaling3D([0.2, 0.3, 0.2])
-            this.parts[k].addTranslation([x, -0.3, z])
+            this.parts[k].addTranslation([x, -0.35, z])
             this.parts[k].applyTransformation()
             this.parts[k].id = k
             this.parts[k].mid = [0, -0.2, z]
