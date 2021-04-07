@@ -16,18 +16,19 @@ class Cube extends GeoObject {
         this.faces = {}
         this.FACES.forEach((v) => {
             this.faces[v] = new Polygon([
-                [ size / 2, -size / 2, size / 2],
                 [ size / 2,  size / 2, size / 2],
+                [ size / 2, -size / 2, size / 2],
+                [-size / 2, -size / 2, size / 2],
                 [-size / 2,  size / 2, size / 2],
-                [-size / 2, -size / 2, size / 2]
             ], color, [0, 0, 1], shininess)
         })
 
-        this.faces["top"].addRotateX(90)
-        this.faces["bottom"].addRotateX(-90)
-        this.faces["behind"].addRotateX(180)
+        this.faces["bottom"].addRotateX(90)
+        this.faces["top"].addRotateX(-90)
+        this.faces["front"].addRotateX(180)
         this.faces["left"].addRotateY(-90)
         this.faces["right"].addRotateY(90)
+        this.faces["front"].addRotateZ(180)
 
         this.FACES.forEach((v) => {
             this.faces[v].applyTransformation()
@@ -47,7 +48,7 @@ class Cube extends GeoObject {
         this.faces = []
         this.FACES.forEach((k) => {
             let part = data[k]
-            this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"])
+            this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"], part["texCoord"])
         })
         this.id = data["id"]
         this.bound = data["bound"]
@@ -57,12 +58,13 @@ class Cube extends GeoObject {
     parse() {
         let parsed = {}
         this.FACES.forEach((k) => {
-            parsed[k] = new Polygon(
-                to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix))),
-                this.faces[k].color,
-                to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0],
-                this.faces[k].shininess,
-            )
+            parsed[k] = {
+                "vertices": to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix))),
+                "color": this.faces[k].color,
+                "normal": to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0],
+                "shininess": this.faces[k].shininess,
+                "texCoord": this.faces[k].texCoord
+            }
         })
         parsed["mid"] = this.mid
         parsed["id"] = this.id

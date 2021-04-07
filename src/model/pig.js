@@ -47,6 +47,15 @@ class MinecraftPigModel extends GeoObject {
                 range: [[-90, 90, 1], [], []]
             }
         }
+        this.parts["head"].FACES.forEach((f) => {
+            this.parts["head"].faces[f].texCoord = texCoordPig["head"][f]
+            this.parts["nose"].faces[f].texCoord = texCoordPig["nose"][f]
+            this.parts["left-arm"].faces[f].texCoord = texCoordPig["leg"][f]
+            this.parts["right-arm"].faces[f].texCoord = texCoordPig["leg"][f]
+            this.parts["left-leg"].faces[f].texCoord = texCoordPig["leg"][f]
+            this.parts["right-leg"].faces[f].texCoord = texCoordPig["leg"][f]
+            this.parts["body"].faces[f].texCoord = texCoordPig["body"][f]
+        })
 
         const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
         keys.forEach((k, i) => {
@@ -170,6 +179,20 @@ class MinecraftPigModel extends GeoObject {
                 )
             }
         })
+    }
+
+    draw(gl, shaderProgram) {
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
+        super.draw(gl, shaderProgram)
+    }
+
+    animate(gl, shaderProgram, frame) {
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
+        super.animate(gl, shaderProgram, frame)
     }
 
     _toShape(data) {

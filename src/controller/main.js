@@ -26,6 +26,8 @@ class Observer {
         this.initUploader()
     
         this.main = new MainView(this)
+        configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg", "pig_skin");
+
         this.drawObjects(this.main.gl, this.main.shaderProgram)
         // this.applyProjection()
     }
