@@ -1,5 +1,5 @@
 const ASPECT_RATIO = 1
-const FRAMES = 100
+const FRAMES = 200
 const MODE = Object.freeze({ NONE: null, ROTATE: "rotate", TRANSLATE: "translate" })
 const PROJ = Object.freeze({ ORTHO: "ortho", PSPEC: "pspec", OBLIQUE: "oblique"})
 
