@@ -70,7 +70,30 @@ class Observer {
 
     initButtons() {
         document.getElementById("animate-btn").onclick = () => {
-            this.animateObjects(this.main.gl, this.main.shaderProgram)
+            if (document.getElementById("animate-btn").innerHTML == "Start Animate") {
+                this.animateObjects(this.main.gl, this.main.shaderProgram)
+                document.getElementById("animate-btn").innerHTML = "Stop Animate"
+            } else {
+                document.getElementById("animate-btn").innerHTML = "Start Animate"
+                document.getElementById("model-transformation").style.display = "initial"
+                document.getElementById("animate-btn").disabled = false
+                clearInterval(this.animationLoop)
+                this.objects.forEach((obj) => {
+                    obj.reset()
+                })
+                this.cleanupAnimation()
+                if (this.selected) {
+                    this.resetTrf()
+                    this.initTransforms()
+
+                    document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
+                    this.mode = MODE.NONE
+                    confirmations.forEach((k) => {
+                        document.getElementById(k+'-btn').hidden = true
+                    })
+                }
+                this.drawObjects(this.main.gl, this.main.shaderProgram)
+            }
         }
 
         modes.forEach((k) => {
@@ -508,34 +531,16 @@ class Observer {
         gl.clearColor(1.0, 1.0, 1.0, 1.0)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         document.getElementById("model-transformation").style.display = "none"
-        document.getElementById("animate-btn").disabled = true
 
         let i = 0
         this.initAnimation()
-        let hehe = setInterval(() => {
+        this.animationLoop = setInterval(() => {
             this.objects.forEach((obj) => {
                 obj.animate(gl, shaderProgram, i)
             })
             i += 1
             if (i == FRAMES+1) {
-                document.getElementById("model-transformation").style.display = "initial"
-                document.getElementById("animate-btn").disabled = false
-                clearInterval(hehe)
-                this.objects.forEach((obj) => {
-                    obj.reset()
-                })
-                this.cleanupAnimation()
-                if (this.selected) {
-                    this.resetTrf()
-                    this.initTransforms()
-
-                    document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
-                    this.mode = MODE.NONE
-                    confirmations.forEach((k) => {
-                        document.getElementById(k+'-btn').hidden = true
-                    })
-                }
-                this.drawObjects(gl, shaderProgram)
+                i = 0
             }
         }, 100)
     }
