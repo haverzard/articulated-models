@@ -28,6 +28,13 @@ class GeoObject {
         }
     }
 
+    resetState() {
+        this.state = {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+        }
+    }
+
     setColor(color) {
         this.color = color
     }

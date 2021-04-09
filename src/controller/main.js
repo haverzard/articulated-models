@@ -84,9 +84,9 @@ class Observer {
                 this.cleanupAnimation()
                 if (this.selected) {
                     this.resetTrf()
-                    this.initTransforms()
+                    this.selected.resetState()
 
-                    document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
+                    if (this.mode) document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
                     this.mode = MODE.NONE
                     confirmations.forEach((k) => {
                         document.getElementById(k+'-btn').hidden = true
@@ -137,7 +137,7 @@ class Observer {
             } else {
                 document.getElementById(m+'-sec').hidden = true
             }
-            document.getElementById(m+"-btn").onclick = () => {
+            document.getElementById(m+"-btn").onclick = (applied=true) => {
                 if (this.projMode) {
                     document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
                     if (this.projMode !== PROJ.PSPEC) {
@@ -158,7 +158,7 @@ class Observer {
                     document.getElementById(m+'-sec').hidden = false
                 }
                 document.getElementById(m+'-btn').classList.toggle("selected")
-                this.applyProjection();
+                this.applyProjection(applied);
             }
         })
 
@@ -232,7 +232,7 @@ class Observer {
         this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
-    applyProjection() {
+    applyProjection(applied=true) {
         // get projection matrix
         let projectionMatrix = I
         if (this.projMode === PROJ.ORTHO) { 
@@ -266,10 +266,10 @@ class Observer {
         // send projection matrix to gpu
         setMatTransform(this.main.gl, this.main.shaderProgram, "u_Projection", projectionMatrix)
         // draw changes
-        this.drawObjects(this.main.gl, this.main.shaderProgram)
+        if (applied) this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
-    applyCamConfig() {
+    applyCamConfig(applied=true) {
         // get camera model matrix
         let matCam = getIdentityMat()
         matCam = matMult(getTMat([0, 0, -this.camConfig["radius"]]), matCam)
@@ -280,7 +280,7 @@ class Observer {
         setMatTransform(this.main.gl, this.main.shaderProgram, "u_Model", matCam)
         this.main.ModelMatrix = matCam
         // draw changes
-        this.drawObjects(this.main.gl, this.main.shaderProgram)
+        if (applied) this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
     resetTrf() {
@@ -505,13 +505,13 @@ class Observer {
             "radius": this.camConfig["radius"],
             "yRot": this.camConfig["yRot"],
         }
-        document.getElementById("pspec-btn").onclick()
+        document.getElementById("pspec-btn").onclick(false)
         document.getElementById("translate-cam").value = 7
         document.getElementById("rotate-cam1").value = 350
         this.camConfig["radius"] = 7
         this.camConfig["yRot"] = 350
-        this.applyCamConfig()
-        this.applyProjection()
+        this.applyCamConfig(false)
+        this.applyProjection(false)
     }
 
     cleanupAnimation() {

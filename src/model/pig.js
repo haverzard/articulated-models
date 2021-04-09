@@ -104,39 +104,43 @@ class MinecraftPigModel extends GeoObject {
             "body": [
                 [0, {
                     translate: [-1.5, 0, -1.5],
+                    rotate: [0, -225, 0],
+                }],
+                [2.5, {
+                    translate: [-1.5, 0, -1.5],
                     rotate: [0, -180, 0],
                 }],
-                [20, {
+                [22.5, {
                     translate: [-1.5, 0, 1.5],
                     rotate: [0, -180, 0],
                 }],
-                [25, {
+                [27.5, {
                     translate: [-1.5, 0, 1.5],
                     rotate: [0, -90, 0],
                 }],
-                [45, {
+                [47.5, {
                     translate: [1.5, 0, 1.5],
                     rotate: [0, -90, 0],
                 }],
-                [50, {
+                [52.5, {
                     translate: [1.5, 0, 1.5],
                     rotate: [0, 0, 0],
                 }],
-                [70, {
+                [72.5, {
                     translate: [1.5, 0, -1.5],
                     rotate: [0, 0, 0],
                 }],
-                [75, {
+                [77.5, {
                     translate: [1.5, 0, -1.5],
                     rotate: [0, 90, 0],
                 }],
-                [95, {
+                [97.5, {
                     translate: [-1.5, 0, -1.5],
                     rotate: [0, 90, 0],
                 }],
                 [100, {
                     translate: [-1.5, 0, -1.5],
-                    rotate: [0, 180, 0],
+                    rotate: [0, 135, 0],
                 }]
             ],
             "head": [
@@ -180,10 +184,15 @@ class MinecraftPigModel extends GeoObject {
                 [0, {
                     translate: [0, 0, 0],
                     rotate: [0, 0, 0],
+                }],
+                [2.5, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
                 }]
             ]
             while (frames <= 100) {
-                for (let i = 0; i < 8; i++) {
+                frames += 2.5
+                for (let i = 0; i < 7; i++) {
                     this.keyframes[k].push(
                         [frames, {
                             translate: [0, 0, 0],
@@ -199,12 +208,12 @@ class MinecraftPigModel extends GeoObject {
                     }]
                 )
                 this.keyframes[k].push(
-                    [frames+2.5, {
+                    [Math.min(frames+5, 100), {
                         translate: [0, 0, 0],
                         rotate: [0, 0, 0],
                     }]
                 )
-                frames += 2.5
+                frames += 5
             }
         })
     }
