@@ -28,6 +28,13 @@ class GeoObject {
         }
     }
 
+    resetState() {
+        this.state = {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+        }
+    }
+
     setColor(color) {
         this.color = color
     }
@@ -117,7 +124,21 @@ class GeoObject {
                 }
                 // if there is no keyframe or keyframe is first keyframe
                 if (idx === null || idx == 0) {
-                    
+                    if (frame == 0) {
+                        this.parts[partIdx]
+                            .resetTransformMatrix()
+                            .addTranslation(neg(this.parts[partIdx].mid))
+
+                        if (idx == 0) {
+                            this.parts[partIdx]
+                                .addRotateX(keyframes[idx][1]["rotate"][0])
+                                .addRotateY(keyframes[idx][1]["rotate"][1])
+                                .addRotateZ(keyframes[idx][1]["rotate"][2])
+                                .addTranslation(keyframes[idx][1]["translate"])
+                        }
+
+                        this.parts[partIdx].addTranslation(this.parts[partIdx].mid)
+                    }                    
                 } else {
                     // the frame where my before keyframe is started
                     let framesA = Math.ceil(FRAMES * keyframes[idx-1][0] / 100)
@@ -140,7 +161,7 @@ class GeoObject {
                     this.parts[partIdx]
                         .resetTransformMatrix()
                         .addTranslation(neg(this.parts[partIdx].mid))
-    
+
                     // apply transformation
                     this.parts[partIdx]
                         .addRotateX(deltaState["rotate"][0])

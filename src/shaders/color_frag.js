@@ -28,16 +28,17 @@ function colorFrag() {
         highp float dir = max(dot(fNormal.xyz, l), 0.0);
         highp float spec = pow(max(dot(fNormal.xyz, h), 0.0), u_shininess);
         highp float d = (length(u_light - gl_FragCoord.xyz));
-        highp vec3 phong = u_ambient + (dir * Id + spec * Is) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
+        // TODO: FIX SPECULAR
+        highp vec3 phong = u_ambient + (dir * Id + spec * Is * 0.0) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
 
         finalColor = vec4(u_color * phong, 1.0);
-        if (u_texture && u_TextureMode == 1) {
-          finalColor = finalColor * texture2D(texture, fTexCoord);
-        }
-        gl_FragColor = finalColor;
       } else {
-        gl_FragColor = vec4(u_color, 1.0);
+        finalColor = vec4(u_color, 1.0);
       }
-    }
+      if (u_texture && u_TextureMode == 1) {
+        finalColor = finalColor * texture2D(texture, fTexCoord);
+      }
+      gl_FragColor = finalColor;
+  }
     `
 }

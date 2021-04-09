@@ -103,20 +103,44 @@ class MinecraftPigModel extends GeoObject {
         this.keyframes = {
             "body": [
                 [0, {
-                    translate: [0, 0, -1],
+                    translate: [-1.5, 0, -1.5],
+                    rotate: [0, -225, 0],
+                }],
+                [2.5, {
+                    translate: [-1.5, 0, -1.5],
                     rotate: [0, -180, 0],
                 }],
-                [50, {
-                    translate: [0, 0, 2],
+                [22.5, {
+                    translate: [-1.5, 0, 1.5],
                     rotate: [0, -180, 0],
                 }],
-                [55, {
-                    translate: [0, 0, 2],
+                [27.5, {
+                    translate: [-1.5, 0, 1.5],
                     rotate: [0, -90, 0],
+                }],
+                [47.5, {
+                    translate: [1.5, 0, 1.5],
+                    rotate: [0, -90, 0],
+                }],
+                [52.5, {
+                    translate: [1.5, 0, 1.5],
+                    rotate: [0, 0, 0],
+                }],
+                [72.5, {
+                    translate: [1.5, 0, -1.5],
+                    rotate: [0, 0, 0],
+                }],
+                [77.5, {
+                    translate: [1.5, 0, -1.5],
+                    rotate: [0, 90, 0],
+                }],
+                [97.5, {
+                    translate: [-1.5, 0, -1.5],
+                    rotate: [0, 90, 0],
                 }],
                 [100, {
-                    translate: [2, 0, 2],
-                    rotate: [0, -90, 0],
+                    translate: [-1.5, 0, -1.5],
+                    rotate: [0, 135, 0],
                 }]
             ],
             "head": [
@@ -126,57 +150,70 @@ class MinecraftPigModel extends GeoObject {
                 }]
             ]
         }
-        for (let i = 0; i <= 4; i++) {
+        let frames = 5
+        while (frames <= 100) {
+            for (let i = 0; i < 3; i++) {
+                this.keyframes["head"].push(
+                    [frames, {
+                        translate: [0, 0, 0],
+                        rotate: [-30 * (1 - (i % 2) * 2), 0, 0],
+                    }]
+                )
+                frames += 5
+            }
             this.keyframes["head"].push(
-                [5 + i * 10, {
+                [frames, {
                     translate: [0, 0, 0],
-                    rotate: [-30 * (1 - (i % 2) * 2), 0, 0],
+                    rotate: [0, 0, 0],
                 }]
             )
+            this.keyframes["head"].push(
+                [frames+5, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
+                }]
+            )
+            frames += 10
         }
-        this.keyframes["head"].push(
-            [50, {
-                translate: [0, 0, 0],
-                rotate: [0, 0, 0],
-            }]
-        )
         
         const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
         keys.forEach((k, mod) => {
             mod = mod % 2
+            frames = 2.5
             this.keyframes[k] = [
                 [0, {
                     translate: [0, 0, 0],
                     rotate: [0, 0, 0],
+                }],
+                [2.5, {
+                    translate: [0, 0, 0],
+                    rotate: [0, 0, 0],
                 }]
             ]
-            for (let i = 0; i <= 9; i++) {
+            while (frames <= 100) {
+                frames += 2.5
+                for (let i = 0; i < 7; i++) {
+                    this.keyframes[k].push(
+                        [frames, {
+                            translate: [0, 0, 0],
+                            rotate: [60 * (1 - mod * 2) * (1 - (i % 2) * 2), 0, 0],
+                        }]
+                    )
+                    frames += 2.5
+                }
                 this.keyframes[k].push(
-                    [2.5 + i * 5, {
+                    [frames, {
                         translate: [0, 0, 0],
-                        rotate: [60 * (1 - mod * 2) * (1 - (i % 2) * 2), 0, 0],
+                        rotate: [0, 0, 0],
                     }]
                 )
-            }
-            this.keyframes[k].push(
-                [45, {
-                    translate: [0, 0, 0],
-                    rotate: [0, 0, 0],
-                }]
-            )
-            this.keyframes[k].push(
-                [55, {
-                    translate: [0, 0, 0],
-                    rotate: [0, 0, 0],
-                }]
-            )
-            for (let i = 0; i <= 9; i++) {
                 this.keyframes[k].push(
-                    [55 + i * 5, {
+                    [Math.min(frames+5, 100), {
                         translate: [0, 0, 0],
-                        rotate: [60 * (1 - mod * 2) * (1 - (i % 2) * 2), 0, 0],
+                        rotate: [0, 0, 0],
                     }]
                 )
+                frames += 5
             }
         })
     }

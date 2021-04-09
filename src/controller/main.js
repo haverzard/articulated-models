@@ -6,6 +6,8 @@ class Observer {
     constructor() {
         observer = this
         this.selected = null
+        this.selectedIdx = null
+        this.animationLoop = null
         this.objects = []
         this.mode = MODE.NONE
         this.projMode = PROJ.NONE
@@ -70,7 +72,27 @@ class Observer {
 
     initButtons() {
         document.getElementById("animate-btn").onclick = () => {
-            this.animateObjects(this.main.gl, this.main.shaderProgram)
+            if (document.getElementById("animate-btn").innerHTML == "Start Animate") {
+                this.animateObjects(this.main.gl, this.main.shaderProgram)
+                document.getElementById("animate-btn").innerHTML = "Stop Animate"
+            } else {
+                document.getElementById("animate-btn").innerHTML = "Start Animate"
+                document.getElementById("model-transformation").style.display = "initial"
+                document.getElementById("animate-btn").disabled = false
+                clearInterval(this.animationLoop)
+                this.objects.forEach((obj) => {
+                    obj.reset()
+                })
+                this.cleanupAnimation()
+                if (this.selected) {
+                    this.resetTrf()
+                    this.selected.resetState()
+
+                    if (this.mode) document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
+                    this.mode = MODE.NONE
+                }
+                this.drawObjects(this.main.gl, this.main.shaderProgram)
+            }
         }
 
         modes.forEach((k) => {
@@ -114,7 +136,7 @@ class Observer {
             } else {
                 document.getElementById(m+'-sec').hidden = true
             }
-            document.getElementById(m+"-btn").onclick = () => {
+            document.getElementById(m+"-btn").onclick = (applied=true) => {
                 if (this.projMode) {
                     document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
                     if (this.projMode !== PROJ.PSPEC) {
@@ -135,7 +157,7 @@ class Observer {
                     document.getElementById(m+'-sec').hidden = false
                 }
                 document.getElementById(m+'-btn').classList.toggle("selected")
-                this.applyProjection();
+                this.applyProjection(applied);
             }
         })
 
@@ -199,17 +221,13 @@ class Observer {
             this.resetTrf()
             document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
             this.mode = MODE.NONE
-
-            confirmations.forEach((k) => {
-                document.getElementById(k+'-btn').hidden = true
-            })
         }
 
         // draw changes
         this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
-    applyProjection() {
+    applyProjection(applied=true) {
         // get projection matrix
         let projectionMatrix = I
         if (this.projMode === PROJ.ORTHO) { 
@@ -243,10 +261,10 @@ class Observer {
         // send projection matrix to gpu
         setMatTransform(this.main.gl, this.main.shaderProgram, "u_Projection", projectionMatrix)
         // draw changes
-        this.drawObjects(this.main.gl, this.main.shaderProgram)
+        if (applied) this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
-    applyCamConfig() {
+    applyCamConfig(applied=true) {
         // get camera model matrix
         let matCam = getIdentityMat()
         matCam = matMult(getTMat([0, 0, -this.camConfig["radius"]]), matCam)
@@ -257,12 +275,15 @@ class Observer {
         setMatTransform(this.main.gl, this.main.shaderProgram, "u_Model", matCam)
         this.main.ModelMatrix = matCam
         // draw changes
-        this.drawObjects(this.main.gl, this.main.shaderProgram)
+        if (applied) this.drawObjects(this.main.gl, this.main.shaderProgram)
     }
 
     resetTrf() {
         modes.forEach((k) => {
             document.getElementById(k+"-sec").hidden = true
+        })
+        confirmations.forEach((k) => {
+            document.getElementById(k+'-btn').hidden = true
         })
     }
 
@@ -400,25 +421,6 @@ class Observer {
         }
     }
 
-    _resetTransform() {
-        this.initTransforms()
-        this.resetTrf()
-        if (this.mode)
-            document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
-
-        this.mode = MODE.NONE
-        this.selected = null
-        modes.forEach((k) => {
-            document.getElementById(k+'-btn').hidden = true
-        })
-        modes.forEach((k) => {
-            document.getElementById(k+'-sec').hidden = true
-        })
-        confirmations.forEach((k) => {
-            document.getElementById(k+'-btn').hidden = true
-        })
-    }
-
     _initObjectButtons() {
         document.getElementById('btn-container').innerHTML = ""
         for (let i = 0; i < this.objects.length; i++) {
@@ -428,11 +430,19 @@ class Observer {
             button.onclick = () => {
                 document.getElementById('btn-container2').innerHTML = ""
                 this.objects[i].PARTS.forEach((k, j) => {
+                    if (this.selectedIdx) {
+                        document.getElementById('btn-container').children[this.selectedIdx].classList.toggle("selected", false)
+                    }
                     var button2 = document.createElement("button")
                     button2.textContent = k
                     document.getElementById('btn-container2').appendChild(button2)
+                    this.selectedIdx = i
+                    document.getElementById('btn-container').children[this.selectedIdx].classList.toggle("selected", true)
+                    document.getElementById('model-transformation').style.display = 'none'
         
                     button2.onclick = () => {
+                        document.getElementById('model-transformation').style.display = 'initial'
+                        this.resetTrf()
                         let obj = this.objects[i].parts[k]
                         if (this.selected !== null) {
                             var children = document.getElementById('btn-container2').children
@@ -441,8 +451,9 @@ class Observer {
                             }
                         }
                         modes.forEach((mode) => {
-                            if (obj.bound[mode].activation.includes(true)) {
+                            if (obj.bound[mode].activation.includes(true) && this.animationLoop === null) {
                                 document.getElementById(mode+'-btn').hidden = false
+                                document.getElementById(mode+'-btn').classList.toggle("selected", false)
                             } else {
                                 document.getElementById(mode+'-btn').hidden = true
                             }
@@ -482,13 +493,13 @@ class Observer {
             "radius": this.camConfig["radius"],
             "yRot": this.camConfig["yRot"],
         }
-        document.getElementById("pspec-btn").onclick()
+        document.getElementById("pspec-btn").onclick(false)
         document.getElementById("translate-cam").value = 7
         document.getElementById("rotate-cam1").value = 350
         this.camConfig["radius"] = 7
         this.camConfig["yRot"] = 350
-        this.applyCamConfig()
-        this.applyProjection()
+        this.applyCamConfig(false)
+        this.applyProjection(false)
     }
 
     cleanupAnimation() {
@@ -496,46 +507,34 @@ class Observer {
         document.getElementById("rotate-cam1").value = this.temp.yRot
         this.camConfig["radius"] = this.temp.radius
         this.camConfig["yRot"] = this.temp.yRot
-        
+
         if (this.projMode) document.getElementById(this.projMode+'-btn').classList.toggle("selected", false)
         this.projMode = PROJ.NONE
         this.applyCamConfig()
         this.applyProjection()
         this.resetProjs()
+        this.animationLoop = null
+        if (this.objects.length != 0) {
+            document.getElementById('btn-container').children[0].onclick()
+        }
     }
 
     animateObjects(gl, shaderProgram) {
         gl.clearColor(1.0, 1.0, 1.0, 1.0)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-        document.getElementById("model-transformation").style.display = "none"
-        document.getElementById("animate-btn").disabled = true
+        if (this.objects.length != 0) {
+            document.getElementById('btn-container').children[0].onclick()
+        }
 
         let i = 0
         this.initAnimation()
-        let hehe = setInterval(() => {
+        this.animationLoop = setInterval(() => {
             this.objects.forEach((obj) => {
                 obj.animate(gl, shaderProgram, i)
             })
             i += 1
             if (i == FRAMES+1) {
-                document.getElementById("model-transformation").style.display = "initial"
-                document.getElementById("animate-btn").disabled = false
-                clearInterval(hehe)
-                this.objects.forEach((obj) => {
-                    obj.reset()
-                })
-                this.cleanupAnimation()
-                if (this.selected) {
-                    this.resetTrf()
-                    this.initTransforms()
-
-                    document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
-                    this.mode = MODE.NONE
-                    confirmations.forEach((k) => {
-                        document.getElementById(k+'-btn').hidden = true
-                    })
-                }
-                this.drawObjects(gl, shaderProgram)
+                i = 0
             }
         }, 100)
     }
@@ -550,9 +549,6 @@ class Observer {
 
             document.getElementById(this.mode+'-btn').classList.toggle("selected", false)
             this.mode = MODE.NONE
-            confirmations.forEach((k) => {
-                document.getElementById(k+'-btn').hidden = true
-            })
         }
         document.getElementById("shading-btn").classList.toggle("selected-on", obj.shading)
         document.getElementById("texture-btn").classList.toggle("selected-on", obj.texture)
