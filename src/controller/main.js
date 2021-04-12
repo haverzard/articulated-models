@@ -473,6 +473,10 @@ class Observer {
         data.forEach((obj) => {
             if (obj["id"].includes("Pig")) {
                 this.objects.push(new MinecraftPigModel(obj))
+                return
+            }
+            if (obj["id"].includes("r3d3")) {
+                this.objects.push(new R3D3(obj))
             }
         })
         this._initObjectButtons()
