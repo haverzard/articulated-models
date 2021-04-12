@@ -219,8 +219,8 @@ class R3D3 extends GeoObject {
         })
     }
 
-    draw(gl, shaderProgram) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        draw(gl, shaderProgram) {
+            gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
         gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
         super.draw(gl, shaderProgram)
