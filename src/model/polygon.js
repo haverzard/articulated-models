@@ -1,16 +1,18 @@
 class Polygon extends GeoObject {
-    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20, texCoord=Array(4).fill([0,0,0])) {
+    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20, texCoord=Array(4).fill([0,0,0]), tangent=[-1, 0, 0]) {
         super()
         this.vertices = vertices
         this.color = color
         this.normal = normal
         this.shininess = shininess
         this.texCoord = texCoord
+        this.tangent = tangent
     }
 
     applyTransformation() {
         this.vertices = to3D(matMult(to4D(this.vertices), transpose(this.TransformMatrix)))
         this.normal = to3D(matMult(to4D([this.normal]), transpose(this.TransformMatrix)))[0]
+        this.tangent = to3D(matMult(to4D([this.tangent]), transpose(this.TransformMatrix)))[0]
         this.resetTransformMatrix()
     }
 
@@ -20,10 +22,12 @@ class Polygon extends GeoObject {
         var tex_buffer = createBuffer(gl, this.texCoord.flat())
 
         // bind buffer to attribute in shaders
+        // console.log(this.normal)
         bindBuffer(gl, shaderProgram, vertex_buffer, 3, 'vPosition')
         bindBuffer(gl, shaderProgram, tex_buffer, 2, 'vTexCoord')
         setVector3D(gl, shaderProgram, "u_color", this.color)
         setVector3D(gl, shaderProgram, "u_normal", this.normal)
+        setVector3D(gl, shaderProgram, "u_tangent", this.tangent)
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_shininess"), this.shininess)
 
         /* Step5: Drawing the required object (triangle) */
