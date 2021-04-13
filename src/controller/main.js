@@ -29,9 +29,14 @@ class Observer {
         this.initUploader()
     
         this.main = new MainView(this)
-        configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg", "pig_skin");
+        textures["pig_skin"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg");
+        textures["normal"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112676030_d9693e81df_m.jpg");
+        // textures["depth"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112555290_c841bebb80_m.jpg");
+        // textures["pig_skin"] = configureTexture(this.main.gl, "assets/bump_normal.png");
+        // textures["depth"] = configureTexture(this.main.gl, "assets/bump_depth.png");
 
         this.drawObjects(this.main.gl, this.main.shaderProgram)
+        // setTimeout(() => this.drawObjects(this.main.gl, this.main.shaderProgram), 1000)
         // this.applyProjection()
     }
 
