@@ -1,6 +1,7 @@
 class MinecraftPigModel extends GeoObject {
     constructor(data = null, size = 1) {
         super()
+        this.useTangent = false
         this.id = "Minecraft Pig"
         this.PARTS = ["body", "right-arm", "left-arm", "right-leg", "left-leg", "head", "nose"]
         this.main = "body"
@@ -219,7 +220,7 @@ class MinecraftPigModel extends GeoObject {
     }
 
     draw(gl, shaderProgram) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
@@ -263,7 +264,7 @@ class MinecraftPigModel extends GeoObject {
     parse() {
         let parsed = {"parts": {}}
         this.PARTS.forEach((k) => {
-            parsed["parts"][k] = this.parts[k].parse()
+            parsed["parts"][k] = this.parts[k].parse(this.useTangent)
         })
         parsed["id"] = this.id
         parsed["keyframes"] = this.keyframes

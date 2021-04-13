@@ -19,10 +19,10 @@ class Polygon extends GeoObject {
     draw(gl, shaderProgram) {
         // create buffer for vertex, color, & depth - for shaders
         var vertex_buffer = createBuffer(gl, this.vertices.flat())
+        // [0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0]
         var tex_buffer = createBuffer(gl, this.texCoord.flat())
 
         // bind buffer to attribute in shaders
-        // console.log(this.normal)
         bindBuffer(gl, shaderProgram, vertex_buffer, 3, 'vPosition')
         bindBuffer(gl, shaderProgram, tex_buffer, 2, 'vTexCoord')
         setVector3D(gl, shaderProgram, "u_color", this.color)
