@@ -33,6 +33,20 @@ class Cube extends GeoObject {
         this.FACES.forEach((v) => {
             this.faces[v].applyTransformation()
         })
+
+        // this.faces["behind"].tangent = [-1, 0, 0]
+        // this.faces["front"].tangent = [1, 0, 0]
+        // this.faces["left"].tangent = [0, 0, 1]
+        // this.faces["right"].tangent = [0, 0, -1]
+        // this.faces["top"].tangent = [1, 0, 0]
+        // this.faces["bottom"].tangent = [1, 0, 0]
+
+        // this.faces["behind"].normal = [0, 0, -1]
+        // this.faces["front"].normal = [0, 0, -1]
+        // this.faces["left"].normal = [1, 0, 0]
+        // this.faces["right"].normal = [1, 0, 0]
+        // this.faces["top"].normal = [0, -1, 0]
+        // this.faces["bottom"].normal = [0, -1, 0]
     }
 
     draw(gl, shaderProgram) {
@@ -49,14 +63,18 @@ class Cube extends GeoObject {
         this.faces = []
         this.FACES.forEach((k) => {
             let part = data[k]
-            this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"], part["texCoord"])
+            if (part["tangent"]) {
+                this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"], part["texCoord"], part["tangent"])
+            } else {
+                this.faces[k] = new Polygon(part["vertices"], part["color"], part["normal"], part["shininess"], part["texCoord"])
+            }
         })
         this.id = data["id"]
         this.bound = data["bound"]
         this.mid = data["mid"]
     }
 
-    parse() {
+    parse(useTangent=true) {
         let parsed = {}
         this.FACES.forEach((k) => {
             parsed[k] = {
@@ -65,6 +83,9 @@ class Cube extends GeoObject {
                 "normal": to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0],
                 "shininess": this.faces[k].shininess,
                 "texCoord": this.faces[k].texCoord
+            }
+            if (useTangent) {
+                parsed[k]["tangent"] = to3D(matMult(to4D([this.faces[k].tangent]), transpose(this.TransformMatrix)))[0]
             }
         })
         parsed["mid"] = this.mid
