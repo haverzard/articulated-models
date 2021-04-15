@@ -1,6 +1,7 @@
 class TurtleModel extends GeoObject {
   constructor(data = null, size = 1) {
     super();
+    this.useTangent = false;
     this.id = "Turtle";
     this.PARTS = [
       "body",
@@ -29,10 +30,34 @@ class TurtleModel extends GeoObject {
       this.parts[k] = new Cube(null, 1, [1, 0.8, 0.9]);
     });
 
+    this.parts["head"].addScaling3D([0.4, 0.4, 0.4]);
+    this.parts["head"].addTranslation([0, 0.1, -0.5]);
+    this.parts["head"].applyTransformation();
+    this.parts["head"].id = "head";
+    this.parts["head"].mid = [0, 0.1, -0.3];
+    this.parts["head"].bound = {
+      ...this.parts["head"].bound,
+      translate: {
+        activation: [false, false, true],
+        range: [[], [], [0, 0.4, 0.001]],
+      },
+    };
+    this.parts["head"].FACES.forEach((f) => {
+      this.parts["head"].faces[f].texCoord = texCoordPig["head"][f];
+      this.parts["left-eye"].faces[f].texCoord = texCoordPig["nose"][f];
+      this.parts["right-eye"].faces[f].texCoord = texCoordPig["nose"][f];
+      this.parts["left-arm"].faces[f].texCoord = texCoordPig["leg"][f];
+      this.parts["right-arm"].faces[f].texCoord = texCoordPig["leg"][f];
+      this.parts["left-leg"].faces[f].texCoord = texCoordPig["leg"][f];
+      this.parts["right-leg"].faces[f].texCoord = texCoordPig["leg"][f];
+      this.parts["body"].faces[f].texCoord = texCoordPig["body"][f];
+      this.parts["shell"].faces[f].texCoord = texCoordPig["head"][f];
+    });
+
     const eyes = ["right-eye", "left-eye"];
     eyes.forEach((k, i) => {
       let x = -0.12;
-      let z = -0.655;
+      let z = -0.72;
       if (Math.floor(i / 2)) z = 0.35;
       if (i % 2) x = -x;
       this.parts[k].addScaling3D([0.06, 0.06, 0.06]);
@@ -43,48 +68,10 @@ class TurtleModel extends GeoObject {
       this.parts[k].bound = {
         ...this.parts[k].bound,
         rotate: {
-          activation: [true, false, false],
-          range: [[-90, 90, 1], [], []],
+          activation: [false, false, true],
+          range: [[], [], [-5, 5, 1]],
         },
       };
-    });
-
-    // this.parts["nose"].addScaling3D([0.2, 0.15, 0.1]);
-    // this.parts["nose"].addTranslation([0, 0.05, -0.7]);
-    // this.parts["nose"].applyTransformation();
-    // this.parts["nose"].id = "nose";
-    // this.parts["nose"].mid = [0, 0.05, -0.7];
-    // this.parts["nose"].bound = {
-    //   translate: {
-    //     activation: [true, true, false],
-    //     range: [[-0.02, 0.02, 0.001], [-0.02, 0.02, 0.001], []],
-    //   },
-    //   rotate: {
-    //     activation: [true, false, false],
-    //     range: [[-10, 10, 1], [], []],
-    //   },
-    // };
-
-    this.parts["head"].addScaling3D([0.3, 0.3, 0.3]);
-    this.parts["head"].addTranslation([0, 0.1, -0.5]);
-    this.parts["head"].applyTransformation();
-    this.parts["head"].id = "head";
-    this.parts["head"].mid = [0, 0.1, -0.3];
-    this.parts["head"].bound = {
-      ...this.parts["head"].bound,
-      rotate: {
-        activation: [true, false, false],
-        range: [[-90, 90, 1], [], []],
-      },
-    };
-    this.parts["head"].FACES.forEach((f) => {
-      // this.parts["head"].faces[f].texCoord = texCoordPig["head"][f];
-      // // this.parts["nose"].faces[f].texCoord = texCoordPig["nose"][f];
-      // this.parts["left-arm"].faces[f].texCoord = texCoordPig["leg"][f];
-      // this.parts["right-arm"].faces[f].texCoord = texCoordPig["leg"][f];
-      // this.parts["left-leg"].faces[f].texCoord = texCoordPig["leg"][f];
-      // this.parts["right-leg"].faces[f].texCoord = texCoordPig["leg"][f];
-      // this.parts["body"].faces[f].texCoord = texCoordPig["body"][f];
     });
 
     const keys = ["right-arm", "left-arm", "right-leg", "left-leg"];
@@ -94,7 +81,7 @@ class TurtleModel extends GeoObject {
       if (Math.floor(i / 2)) z = 0.35;
       if (i % 2) x = -x;
       this.parts[k].addScaling3D([0.2, 0.3, 0.2]);
-      this.parts[k].addTranslation([x, -0.35, z]);
+      this.parts[k].addTranslation([x, -0.3, z]);
       this.parts[k].applyTransformation();
       this.parts[k].id = k;
       this.parts[k].mid = [0, -0.2, z];
@@ -134,21 +121,9 @@ class TurtleModel extends GeoObject {
     this.parts["shell"].applyTransformation();
     this.parts["shell"].id = "shell";
     this.parts["shell"].bound = {
-      translate: {
-        activation: [true, true, true],
-        range: [
-          [-5, 5, 0.01],
-          [-5, 5, 0.01],
-          [-5, 5, 0.01],
-        ],
-      },
       rotate: {
-        activation: [true, true, true],
-        range: [
-          [-180, 180, 1],
-          [-180, 180, 1],
-          [-180, 180, 1],
-        ],
+        activation: [true, false, true],
+        range: [[-15, 15, 1], [], [-15, 15, 1]],
       },
     };
 
@@ -245,6 +220,33 @@ class TurtleModel extends GeoObject {
           },
         ],
       ],
+      shell: [
+        [
+          0,
+          {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+          },
+        ],
+      ],
+      [`left-eye`]: [
+        [
+          0,
+          {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+          },
+        ],
+      ],
+      [`right-eye`]: [
+        [
+          0,
+          {
+            translate: [0, 0, 0],
+            rotate: [0, 0, 0],
+          },
+        ],
+      ],
     };
     let frames = 5;
     while (frames <= 100) {
@@ -252,8 +254,29 @@ class TurtleModel extends GeoObject {
         this.keyframes["head"].push([
           frames,
           {
+            translate: [0, 0, (i + 1) / 5.1],
+            rotate: [0, 0, 0],
+          },
+        ]);
+        this.keyframes["shell"].push([
+          frames,
+          {
             translate: [0, 0, 0],
-            rotate: [-30 * (1 - (i % 2) * 2), 0, 0],
+            rotate: [0, 0, -20 * (1 - (i % 2) * 2)],
+          },
+        ]);
+        this.keyframes["left-eye"].push([
+          frames,
+          {
+            translate: [0, 0, 0],
+            rotate: [0, 0, -10 * (1 - (i % 2) * 2)],
+          },
+        ]);
+        this.keyframes["right-eye"].push([
+          frames,
+          {
+            translate: [0, 0, 0],
+            rotate: [0, 0, -10 * (1 - (i % 2) * 2)],
           },
         ]);
         frames += 5;
@@ -266,6 +289,48 @@ class TurtleModel extends GeoObject {
         },
       ]);
       this.keyframes["head"].push([
+        frames + 5,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["shell"].push([
+        frames,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["shell"].push([
+        frames + 5,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["left-eye"].push([
+        frames,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["left-eye"].push([
+        frames + 5,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["right-eye"].push([
+        frames,
+        {
+          translate: [0, 0, 0],
+          rotate: [0, 0, 0],
+        },
+      ]);
+      this.keyframes["right-eye"].push([
         frames + 5,
         {
           translate: [0, 0, 0],
@@ -328,8 +393,14 @@ class TurtleModel extends GeoObject {
 
   draw(gl, shaderProgram) {
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"]);
-    gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
+    gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
+
+    // gl.activeTexture(gl.TEXTURE1);
+    // gl.bindTexture(gl.TEXTURE_2D, textures["normal"])
+    // gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_norm"), 1);
+
     super.draw(gl, shaderProgram);
   }
 
@@ -359,13 +430,15 @@ class TurtleModel extends GeoObject {
     this.parts["body"].addChild(this.parts["left-arm"]);
     this.parts["body"].addChild(this.parts["right-leg"]);
     this.parts["body"].addChild(this.parts["left-leg"]);
-    this.parts["head"].addChild(this.parts["nose"]);
+    this.parts["body"].addChild(this.parts["shell"]);
+    this.parts["head"].addChild(this.parts["left-eye"]);
+    this.parts["head"].addChild(this.parts["right-eye"]);
   }
 
   parse() {
     let parsed = { parts: {} };
     this.PARTS.forEach((k) => {
-      parsed["parts"][k] = this.parts[k].parse();
+      parsed["parts"][k] = this.parts[k].parse(this.useTangent);
     });
     parsed["id"] = this.id;
     parsed["keyframes"] = this.keyframes;

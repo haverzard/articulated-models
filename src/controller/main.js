@@ -15,12 +15,14 @@ class Observer {
 
     // TODO: DELETE LATER
     // model saver
-    // var a = document.createElement('a')
-    // a.download = 'model.json'
-    // a.href = window.URL.createObjectURL(
-    //   new Blob([JSON.stringify([(new MinecraftPigModel()).parse()], null, 2)], { type: 'application/json' }),
-    // )
-    // a.click()
+    var a = document.createElement("a");
+    a.download = "model.json";
+    a.href = window.URL.createObjectURL(
+      new Blob([JSON.stringify([new TurtleModel().parse()], null, 2)], {
+        type: "application/json",
+      })
+    );
+    a.click();
 
     this.initCamConfig();
     this.initProjection();
@@ -552,6 +554,8 @@ class Observer {
     data.forEach((obj) => {
       if (obj["id"].includes("Pig")) {
         this.objects.push(new MinecraftPigModel(obj));
+      } else if (obj["id"].includes("Turtle")) {
+        this.objects.push(new TurtleModel(obj));
       }
     });
     this._initObjectButtons();
