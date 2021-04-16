@@ -43,7 +43,7 @@ class Observer {
     //   this.main.gl,
     //   "https://live.staticflickr.com/65535/51112555290_c841bebb80_m.jpg"
     // );
-    textures["pig_skin"] = configureTexture(
+    textures["turtle_skin"] = configureTexture(
       this.main.gl,
       "https://live.staticflickr.com/65535/51116334840_4d1d06d798_m.jpg"
     );

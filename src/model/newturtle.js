@@ -394,7 +394,7 @@ class TurtleModel extends GeoObject {
   draw(gl, shaderProgram) {
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"]);
+    gl.bindTexture(gl.TEXTURE_2D, textures["turtle_skin"]);
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
 
     // gl.activeTexture(gl.TEXTURE1);
@@ -406,7 +406,7 @@ class TurtleModel extends GeoObject {
 
   animate(gl, shaderProgram, frame) {
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
-    gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"]);
+    gl.bindTexture(gl.TEXTURE_2D, textures["turtle_skin"]);
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
     super.animate(gl, shaderProgram, frame);
   }
