@@ -15,14 +15,14 @@ class Observer {
 
     // TODO: DELETE LATER
     // model saver
-    var a = document.createElement("a");
-    a.download = "model.json";
-    a.href = window.URL.createObjectURL(
-      new Blob([JSON.stringify([new TurtleModel().parse()], null, 2)], {
-        type: "application/json",
-      })
-    );
-    a.click();
+    // var a = document.createElement("a");
+    // a.download = "model.json";
+    // a.href = window.URL.createObjectURL(
+    //   new Blob([JSON.stringify([new TurtleModel().parse()], null, 2)], {
+    //     type: "application/json",
+    //   })
+    // );
+    // a.click();
 
     this.initCamConfig();
     this.initProjection();
