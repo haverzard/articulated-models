@@ -11,6 +11,7 @@ class Observer {
         this.objects = []
         this.mode = MODE.NONE
         this.projMode = PROJ.NONE
+        this.frames = 0
 
         // TODO: DELETE LATER
         // model saver
@@ -28,9 +29,14 @@ class Observer {
         this.initUploader()
     
         this.main = new MainView(this)
-        configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg", "pig_skin");
+        textures["pig_skin"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg");
+        textures["normal"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112676030_d9693e81df_m.jpg");
+        // textures["depth"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112555290_c841bebb80_m.jpg");
+        // textures["pig_skin"] = configureTexture(this.main.gl, "assets/bump_normal.png");
+        // textures["depth"] = configureTexture(this.main.gl, "assets/bump_depth.png");
 
         this.drawObjects(this.main.gl, this.main.shaderProgram)
+        // setTimeout(() => this.drawObjects(this.main.gl, this.main.shaderProgram), 1000)
         // this.applyProjection()
     }
 
@@ -71,11 +77,28 @@ class Observer {
     }
 
     initButtons() {
+        document.getElementById("while-animate-btn").disabled = true
+        document.getElementById("while-animate-btn").onclick = () => {
+            if (document.getElementById("while-animate-btn").innerHTML == "Pause Animation") {
+                document.getElementById("while-animate-btn").innerHTML = "Continue Animation"
+                clearInterval(this.animationLoop)
+            } else {
+                this.animateObjects(this.main.gl, this.main.shaderProgram, false)
+                document.getElementById("while-animate-btn").innerHTML = "Pause Animation"
+            }
+        }
         document.getElementById("animate-btn").onclick = () => {
             if (document.getElementById("animate-btn").innerHTML == "Start Animate") {
+                this.frames = 0
+                this.main.gl.clearColor(1.0, 1.0, 1.0, 1.0)
+                this.main.gl.clear(this.main.gl.COLOR_BUFFER_BIT | this.main.gl.DEPTH_BUFFER_BIT)
                 this.animateObjects(this.main.gl, this.main.shaderProgram)
+                document.getElementById("while-animate-btn").disabled = false
+                document.getElementById("while-animate-btn").innerHTML = "Pause Animation"
                 document.getElementById("animate-btn").innerHTML = "Stop Animate"
             } else {
+                document.getElementById("while-animate-btn").disabled = true
+                document.getElementById("while-animate-btn").innerHTML = "Continue Animation"
                 document.getElementById("animate-btn").innerHTML = "Start Animate"
                 document.getElementById("model-transformation").style.display = "initial"
                 document.getElementById("animate-btn").disabled = false
@@ -523,22 +546,19 @@ class Observer {
         }
     }
 
-    animateObjects(gl, shaderProgram) {
-        gl.clearColor(1.0, 1.0, 1.0, 1.0)
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    animateObjects(gl, shaderProgram, init=true) {
         if (this.objects.length != 0) {
             document.getElementById('btn-container').children[0].onclick()
         }
 
-        let i = 0
-        this.initAnimation()
+        if (init) this.initAnimation()
         this.animationLoop = setInterval(() => {
             this.objects.forEach((obj) => {
-                obj.animate(gl, shaderProgram, i)
+                obj.animate(gl, shaderProgram, this.frames)
             })
-            i += 1
-            if (i == FRAMES+1) {
-                i = 0
+            this.frames++
+            if (this.frames == FRAMES+1) {
+                this.frames = 0
             }
         }, 100)
     }
