@@ -8,6 +8,7 @@ class Observer {
     this.selected = null;
     this.selectedIdx = null;
     this.animationLoop = null;
+    this.instances = [new MinecraftPigModel(), new MinecraftTurtleModel()];
     this.objects = [];
     this.mode = MODE.NONE;
     this.projMode = PROJ.NONE;
@@ -15,10 +16,32 @@ class Observer {
 
     // TODO: DELETE LATER
     // model saver
+    // var pig = new MinecraftPigModel()
+    // pig.addTranslation([-0.5, 0, 0])
+    // pig.applyTransformation()
+    // var turtle = new MinecraftTurtleModel()
+    // turtle.addTranslation([0.5, 0, 0])
+    // turtle.applyTransformation()
     // var a = document.createElement("a");
     // a.download = "model.json";
     // a.href = window.URL.createObjectURL(
-    //   new Blob([JSON.stringify([new TurtleModel().parse()], null, 2)], {
+    //   new Blob([JSON.stringify([pig.parse(), turtle.parse()], null, 2)], {
+    //     type: "application/json",
+    //   })
+    // );
+    // a.click();
+    // var a = document.createElement("a");
+    // a.download = "model.json";
+    // a.href = window.URL.createObjectURL(
+    //   new Blob([JSON.stringify([new MinecraftTurtleModel().parse()], null, 2)], {
+    //     type: "application/json",
+    //   })
+    // );
+    // a.click();
+    // var a = document.createElement("a");
+    // a.download = "model.json";
+    // a.href = window.URL.createObjectURL(
+    //   new Blob([JSON.stringify([new MinecraftPigModel().parse()], null, 2)], {
     //     type: "application/json",
     //   })
     // );
@@ -31,10 +54,10 @@ class Observer {
     this.initUploader();
 
     this.main = new MainView(this);
-    // textures["pig_skin"] = configureTexture(
-    //   this.main.gl,
-    //   "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg"
-    // );
+    textures["pig_skin"] = configureTexture(
+      this.main.gl,
+      "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg"
+    );
     // textures["normal"] = configureTexture(
     //   this.main.gl,
     //   "https://live.staticflickr.com/65535/51112676030_d9693e81df_m.jpg"
@@ -277,7 +300,6 @@ class Observer {
 
     // apply it to the object so it's permanent
     if (perm) {
-      // this.selected.applyTransformation()
       this.resetTrf();
       document
         .getElementById(this.mode + "-btn")
@@ -555,7 +577,7 @@ class Observer {
       if (obj["id"].includes("Pig")) {
         this.objects.push(new MinecraftPigModel(obj));
       } else if (obj["id"].includes("Turtle")) {
-        this.objects.push(new TurtleModel(obj));
+        this.objects.push(new MinecraftTurtleModel(obj));
       }
     });
     this._initObjectButtons();
@@ -612,6 +634,8 @@ class Observer {
 
     if (init) this.initAnimation();
     this.animationLoop = setInterval(() => {
+      gl.clearColor(1.0, 1.0, 1.0, 1.0)
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
       this.objects.forEach((obj) => {
         obj.animate(gl, shaderProgram, this.frames);
       });

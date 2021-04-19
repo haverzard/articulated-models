@@ -110,8 +110,21 @@ class GeoObject {
         return
     }
 
+    getInstance() {
+        return
+    }
+
     animate(gl, shaderProgram, frame) {
+        var cor = this.getInstance()
+        var mids = []
+        var faces = []
         this.PARTS.forEach((partIdx) => {
+            // use instance position instead
+            mids.push(this.parts[partIdx].mid)
+            faces.push(this.parts[partIdx].faces)
+            this.parts[partIdx].mid = cor.parts[partIdx].mid
+            this.parts[partIdx].faces = cor.parts[partIdx].faces
+
             let keyframes = this.keyframes[partIdx]
             if (keyframes) {
                 let idx = null
@@ -174,9 +187,13 @@ class GeoObject {
             }
         })
         // draw after everything is set
-        gl.clearColor(1.0, 1.0, 1.0, 1.0)
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         this.draw(gl, shaderProgram)
+        
+        // reset parts
+        this.PARTS.forEach((partIdx, idx) => {
+            this.parts[partIdx].mid = mids[idx]
+            this.parts[partIdx].faces = faces[idx]
+        })
     }
 
     draw(gl, shaderProgram) {

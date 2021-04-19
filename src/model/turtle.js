@@ -1,7 +1,7 @@
-class TurtleModel extends GeoObject {
+class MinecraftTurtleModel extends GeoObject {
   constructor(data = null, size = 1) {
     super();
-    this.useTangent = false;
+    this.useTangent = true;
     this.id = "Turtle";
     this.PARTS = [
       "body",
@@ -43,8 +43,8 @@ class TurtleModel extends GeoObject {
       },
     };
 
-    this.parts["shell"].addScaling3D([0.8, 0.25, 0.9]);
-    this.parts["shell"].addTranslation([0, 0.2, 0.05]);
+    this.parts["shell"].addScaling3D([0.6, 0.1, 0.6]);
+    this.parts["shell"].addTranslation([0, 0.1, 0.05]);
     this.parts["shell"].applyTransformation();
     this.parts["shell"].id = "shell";
     this.parts["shell"].bound = {
@@ -167,71 +167,22 @@ class TurtleModel extends GeoObject {
         [
           0,
           {
-            translate: [-0.5, 0, -1],
-            rotate: [0, -225, 0],
-          },
-        ],
-        [
-          5,
-          {
-            translate: [-0.5, 0, -1],
+            translate: [0, 0, -1],
             rotate: [0, -180, 0],
           },
         ],
         [
-          22.5,
+          50,
           {
-            translate: [-0.5, 0, 1],
+            translate: [0, 0, 1],
             rotate: [0, -180, 0],
-          },
-        ],
-        [
-          27.5,
-          {
-            translate: [-0.5, 0, 1],
-            rotate: [0, -90, 0],
-          },
-        ],
-        [
-          47.5,
-          {
-            translate: [0.5, 0, 1],
-            rotate: [0, -90, 0],
-          },
-        ],
-        [
-          52.5,
-          {
-            translate: [0.5, 0, 1],
-            rotate: [0, 0, 0],
-          },
-        ],
-        [
-          72.5,
-          {
-            translate: [0.5, 0, -1],
-            rotate: [0, 0, 0],
-          },
-        ],
-        [
-          77.5,
-          {
-            translate: [0.5, 0, -1.5],
-            rotate: [0, 90, 0],
-          },
-        ],
-        [
-          97.5,
-          {
-            translate: [-0.5, 0, -1.5],
-            rotate: [0, 90, 0],
           },
         ],
         [
           100,
           {
-            translate: [-0.5, 0, -1.5],
-            rotate: [0, 135, 0],
+            translate: [0, 0, -1],
+            rotate: [0, -180, 0],
           },
         ],
       ],
@@ -378,15 +329,15 @@ class TurtleModel extends GeoObject {
     });
   }
 
+  getInstance() {
+    return observer.instances[1]
+  }
+
   draw(gl, shaderProgram) {
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 2);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures["turtle_skin"]);
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
-
-    // gl.activeTexture(gl.TEXTURE1);
-    // gl.bindTexture(gl.TEXTURE_2D, textures["normal"])
-    // gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_norm"), 1);
 
     super.draw(gl, shaderProgram);
   }
@@ -433,17 +384,10 @@ class TurtleModel extends GeoObject {
   }
 
   applyTransformation() {
-    this.mid = to3D(
-      matMult(to4D([this.mid]), transpose(this.TransformMatrix))
-    )[0];
-    this.FACES.forEach((k) => {
-      this.faces[k].vertices = to3D(
-        matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix))
-      );
-      this.faces[k].normal = to3D(
-        matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix))
-      )[0];
-    });
-    this.resetTransformMatrix();
+    this.PARTS.forEach((k) => {
+      this.parts[k].setTransformMatrix(this.TransformMatrix)
+      this.parts[k].applyTransformation()
+    })
+    this.resetTransformMatrix()
   }
 }
