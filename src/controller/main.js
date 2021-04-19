@@ -31,7 +31,8 @@ class Observer {
         this.main = new MainView(this)
         textures["pig_skin"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg");
         textures["normal"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112676030_d9693e81df_m.jpg");
-        textures["wallpaper"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112596000_5dbf42bd87_b.jpg");
+        textures["wallpaper"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
+        textures["wallpaper"] = environmentTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
         // textures["depth"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51112555290_c841bebb80_m.jpg");
         // textures["pig_skin"] = configureTexture(this.main.gl, "assets/bump_normal.png");
         // textures["depth"] = configureTexture(this.main.gl, "assets/bump_depth.png");

@@ -49,64 +49,42 @@ function configureTexture(gl, url) {
   return texture
 }
 
-function environmentTexture(gl,id) {
+function environmentTexture(gl, url) {
   var texture = gl.createTexture();
-  // textures[id] = texture
-  // gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-  // const faceInfos = [
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  //   {
-  //     target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-  //     url: '/src/assets/wallpaper.jpg',
-  //   },
-  // ];
-  // faceInfos.forEach((faceInfo) => {
-  //   const {target, url} = faceInfo;
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-  //   // Upload the canvas to the cubemap face.
-  //   const level = 0;
-  //   const internalFormat = gl.RGBA;
-  //   const width = 512;
-  //   const height = 512;
-  //   const format = gl.RGBA;
-  //   const type = gl.UNSIGNED_BYTE;
+  var image = new Image();
+  image.src = url
+  requestCORSIfNotSameOrigin(image, url);
+  
+  const targets = [gl.TEXTURE_CUBE_MAP_POSITIVE_X,gl.TEXTURE_CUBE_MAP_NEGATIVE_X, gl.TEXTURE_CUBE_MAP_POSITIVE_Y,gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,gl.TEXTURE_CUBE_MAP_POSITIVE_Z, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z]
 
-  //   // setup each face so it's immediately renderable
-  //   gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
-
-  //   // Asynchronously load an image
-  //   const image = new Image();
-  //   requestCORSIfNotSameOrigin(image, url)
-  //   image.src = url;
-  //   image.addEventListener('load', function() {
-  //     // Now that the image has loaded make copy it to the texture.
-  //     gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-  //     gl.texImage2D(target, level, internalFormat, format, type, image);
-  //     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-  //   });
-  // });
-  // gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-  // gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  targets.forEach((target) => {
+    // Asynchronously load an image
+    image.onload = () => {
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture)
+      gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
+    }
+  });
+  if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+    // gpu support power of 2 only by default
+    gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+  } else {
+    // use padding instead by using wrapping to clamp to edge
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  }
+  return texture
 }
+
 
 function loadShader(gl, vertCoder, fragCoder) {
   var vertShader = gl.createShader(gl.VERTEX_SHADER)

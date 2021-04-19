@@ -19,21 +19,6 @@ class R3D3 extends GeoObject {
             this.parts[k] = new Cube(null, 1, [1,0.8,0.9])
         })
 
-        // this.parts["nose"].addScaling3D([0.2, 0.15, 0.1])
-        // this.parts["nose"].addTranslation([0, 0.05, -0.7])
-        // this.parts["nose"].applyTransformation()
-        // this.parts["nose"].id = "nose"
-        // this.parts["nose"].mid = [0, 0.05, -0.7]
-        // this.parts["nose"].bound = {
-        //     translate: {
-        //         activation: [true, true, false],
-        //         range: [[-0.02, 0.02, 0.001], [-0.02, 0.02, 0.001], []]
-        //     },
-        //     rotate: {
-        //         activation: [true, false, false],
-        //         range: [[-10, 10, 1], [], []]
-        //     }
-        // }
 
         this.parts["head"].addScaling3D([0.4, 0.4, 0.4])
         this.parts["head"].addTranslation([0, 0.1, -0.5])
@@ -96,7 +81,6 @@ class R3D3 extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
-        // this.parts["head"].addChild(this.parts["nose"])
     }
 
     genKeyFrames() {
@@ -220,15 +204,16 @@ class R3D3 extends GeoObject {
 
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
-        gl.bindTexture(gl.TEXTURE_2D, textures["wallpaper"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
         super.draw(gl, shaderProgram)
     }
 
     animate(gl, shaderProgram, frame) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
-        gl.bindTexture(gl.TEXTURE_2D, textures["wallpaper"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
         super.animate(gl, shaderProgram, frame)
     }
 
@@ -251,7 +236,6 @@ class R3D3 extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
-        // this.parts["head"].addChild(this.parts["nose"])
     }
 
     parse() {
