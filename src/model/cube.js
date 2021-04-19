@@ -33,20 +33,6 @@ class Cube extends GeoObject {
         this.FACES.forEach((v) => {
             this.faces[v].applyTransformation()
         })
-
-        // this.faces["behind"].tangent = [-1, 0, 0]
-        // this.faces["front"].tangent = [1, 0, 0]
-        // this.faces["left"].tangent = [0, 0, 1]
-        // this.faces["right"].tangent = [0, 0, -1]
-        // this.faces["top"].tangent = [1, 0, 0]
-        // this.faces["bottom"].tangent = [1, 0, 0]
-
-        // this.faces["behind"].normal = [0, 0, -1]
-        // this.faces["front"].normal = [0, 0, -1]
-        // this.faces["left"].normal = [1, 0, 0]
-        // this.faces["right"].normal = [1, 0, 0]
-        // this.faces["top"].normal = [0, -1, 0]
-        // this.faces["bottom"].normal = [0, -1, 0]
     }
 
     draw(gl, shaderProgram) {

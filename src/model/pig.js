@@ -219,15 +219,15 @@ class MinecraftPigModel extends GeoObject {
         })
     }
 
+    getInstance() {
+        return observer.instances[0]
+      }
+    
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
-
-        // gl.activeTexture(gl.TEXTURE1);
-        // gl.bindTexture(gl.TEXTURE_2D, textures["normal"])
-        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_norm"), 1);
 
         super.draw(gl, shaderProgram)
     }
@@ -272,10 +272,9 @@ class MinecraftPigModel extends GeoObject {
     }
 
     applyTransformation() {
-        this.mid = to3D(matMult(to4D([this.mid]), transpose(this.TransformMatrix)))[0]
-        this.FACES.forEach((k) => {
-            this.faces[k].vertices = to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix)))
-            this.faces[k].normal = to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0]
+        this.PARTS.forEach((k) => {
+            this.parts[k].setTransformMatrix(this.TransformMatrix)
+            this.parts[k].applyTransformation()
         })
         this.resetTransformMatrix()
     }

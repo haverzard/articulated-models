@@ -70,8 +70,6 @@ function norm2dVertex() {
     void main() {
       gl_Position = u_Projection * u_Model * u_View * vec4(vPosition, 1.0);
 
-      // fNormal = vec4(u_normal, 1.0);
-      // fTangent = vec4(u_tangent, 1.0);
       fTexCoord = vTexCoord;
       
       vec3 v_bitang = cross(u_tangent, u_normal);
@@ -92,7 +90,6 @@ function norm2dVertex() {
         ts_frag_pos = vec3(u_Model * u_View * vec4(vPosition, 1.0));
         fNormal = vec3(u_Model * u_View * vec4(u_normal, 1));
       }
-      // fModelView = TBN;
     }
     `
 }
