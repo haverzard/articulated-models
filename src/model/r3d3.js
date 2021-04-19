@@ -1,6 +1,7 @@
 class R3D3 extends GeoObject {
     constructor(data = null, size = 1) {
         super()
+        this.useTangent = false;
         this.id = "r3d3"
         this.PARTS = ["body", "right-arm", "left-arm", "right-leg", "left-leg", "head"]
         this.main = "body"
@@ -32,16 +33,18 @@ class R3D3 extends GeoObject {
                 range: [[-90, 90, 1], [], []]
             }
         }
-        
-        this.parts["head"].FACES.forEach((f) => {
-            this.parts["head"].faces[f].texCoord = texCoordPig["head"][f]
-            this.parts["left-arm"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["right-arm"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["left-leg"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["right-leg"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["body"].faces[f].texCoord = texCoordPig["body"][f]
-        })
 
+        
+       
+    this.parts["head"].FACES.forEach((f) => {
+        this.parts["head"].faces[f].texCoord = texCoordR3D3["head"][f]
+        this.parts["left-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["right-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["left-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["right-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["body"].faces[f].texCoord = texCoordR3D3["body"][f]
+      });
+        
         const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
         keys.forEach((k, i) => {
             let x = -0.149
@@ -202,8 +205,22 @@ class R3D3 extends GeoObject {
         })
     }
 
+    // reconfigureViewModel() {
+    //     var eye = [0.0, 0.0, 1.0];
+    //     var at = [0.0, 0.0, 0.0];
+    //     var up = [0.0, 1.0, 1.0];
+    //     return lookAt(eye, at, up);
+    // }
+    getInstance() {
+        return observer.instances[2];
+      }
+
     draw(gl, shaderProgram) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        // const lookAt = this.reconfigureViewModel()
+        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "viewModel"),lookAt);
+        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
+        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"),0);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
@@ -211,9 +228,10 @@ class R3D3 extends GeoObject {
     }
 
     animate(gl, shaderProgram, frame) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
+        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3)
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 2)
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
         super.animate(gl, shaderProgram, frame)
     }
 
@@ -249,11 +267,11 @@ class R3D3 extends GeoObject {
     }
 
     applyTransformation() {
-        this.mid = to3D(matMult(to4D([this.mid]), transpose(this.TransformMatrix)))[0]
-        this.FACES.forEach((k) => {
-            this.faces[k].vertices = to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix)))
-            this.faces[k].normal = to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0]
+        this.PARTS.forEach((k) => {
+            this.parts[k].setTransformMatrix(this.TransformMatrix)
+            this.parts[k].applyTransformation()
         })
+
         this.resetTransformMatrix()
     }
 }

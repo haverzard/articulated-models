@@ -111,7 +111,7 @@ class GeoObject {
     }
 
     getInstance() {
-        return
+        return 
     }
 
     animate(gl, shaderProgram, frame) {

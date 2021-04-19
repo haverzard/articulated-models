@@ -8,7 +8,7 @@ class Observer {
     this.selected = null;
     this.selectedIdx = null;
     this.animationLoop = null;
-    this.instances = [new MinecraftPigModel(), new MinecraftTurtleModel()];
+    this.instances = [new MinecraftPigModel(), new MinecraftTurtleModel(), new R3D3()];
     this.objects = [];
     this.mode = MODE.NONE;
     this.projMode = PROJ.NONE;
@@ -70,7 +70,9 @@ class Observer {
       this.main.gl,
       "https://live.staticflickr.com/65535/51116334840_4d1d06d798_m.jpg"
     );
+    // textures["wallpaper"] = environmentTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
     textures["wallpaper"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
+    textures["wallpaper"] = environmentTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
     textures["depth"] = configureTexture(
       this.main.gl,
       "https://live.staticflickr.com/65535/51115539946_58d2df30c1_m.jpg"
@@ -579,6 +581,9 @@ class Observer {
         this.objects.push(new MinecraftPigModel(obj));
       } else if (obj["id"].includes("Turtle")) {
         this.objects.push(new MinecraftTurtleModel(obj));
+      }
+      if (obj["id"].includes("r3d3")) {
+        this.objects.push(new R3D3(obj))        
       }
     });
     this._initObjectButtons();
