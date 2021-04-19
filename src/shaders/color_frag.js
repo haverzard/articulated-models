@@ -25,7 +25,7 @@ function colorFrag() {
 
     void main() {
       if (u_shading) {
-        highp vec3 Is = vec3(50000000, 5000000, 5000000);
+        highp vec3 Is = vec3(5000, 5000, 5000);
         highp vec3 Id = vec3(50000, 50000, 50000);
 
         highp vec3 frag = gl_FragCoord.xyz;
@@ -45,8 +45,8 @@ function colorFrag() {
         highp float spec = pow(max(dot(NN, h), 0.0), u_shininess);
         highp float d = (length(ts_light_pos - frag));
 
-        // TODO: FIX SPECULAR
-        highp vec3 phong = u_ambient + (dir * Id + spec * Is * 0.0) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
+        // TODO: IMPROVE SPECULAR
+        highp vec3 phong = u_ambient + (dir * Id + spec * Is * 0.01) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
 
         finalColor = vec4(u_color * phong, 1.0);
       } else {

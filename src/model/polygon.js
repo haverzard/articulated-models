@@ -1,5 +1,5 @@
 class Polygon extends GeoObject {
-    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20, texCoord=Array(4).fill([0,0,0]), tangent=[-1, 0, 0]) {
+    constructor(vertices, color=[0, 0, 0], normal=[0,0,1], shininess=20, texCoord=[[0.0,0.0], [1.0,0.0], [1.0,1.0], [0.0,1.0]], tangent=[-1, 0, 0]) {
         super()
         this.vertices = vertices
         this.color = color
@@ -19,7 +19,6 @@ class Polygon extends GeoObject {
     draw(gl, shaderProgram) {
         // create buffer for vertex, color, & depth - for shaders
         var vertex_buffer = createBuffer(gl, this.vertices.flat())
-        // [0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0]
         var tex_buffer = createBuffer(gl, this.texCoord.flat())
 
         // bind buffer to attribute in shaders
