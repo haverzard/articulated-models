@@ -16,7 +16,6 @@ function norm2dVertex() {
     varying highp vec3 fNormal;
     varying vec2 fTexCoord;
 
-    varying vec3 R;
     uniform mat4 viewModel;
 
     // tangent space
@@ -93,14 +92,6 @@ function norm2dVertex() {
         ts_frag_pos = vec3(u_Model * u_View * vec4(vPosition, 1.0));
         fNormal = vec3(u_Model * u_View * vec4(u_normal, 1));
       }
-
-      if (u_texture == 1 && u_TextureMode==3){
-        // gl_Position = u_Projection * viewModel * u_View * vec4(vPosition, 1.0);
-        // vec3 eyeToSurfaceDir = normalize(vPosition - vec3(0,0,2));
-        // fNormal = vec3(u_Model * u_View * vec4(u_normal, 1));
-        // R = reflect(eyeToSurfaceDir,fNormal);
-      }
-
     }
     `
 }

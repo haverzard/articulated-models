@@ -58,21 +58,14 @@ class Observer {
       this.main.gl,
       "https://live.staticflickr.com/65535/51100246183_ce643b82b0_z.jpg"
     );
-    // textures["normal"] = configureTexture(
-    //   this.main.gl,
-    //   "https://live.staticflickr.com/65535/51112676030_d9693e81df_m.jpg"
-    // );
-    // textures["depth"] = configureTexture(
-    //   this.main.gl,
-    //   "https://live.staticflickr.com/65535/51112555290_c841bebb80_m.jpg"
-    // );
     textures["turtle_skin"] = configureTexture(
       this.main.gl,
       "https://live.staticflickr.com/65535/51116334840_4d1d06d798_m.jpg"
     );
-    // textures["wallpaper"] = environmentTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
-    textures["wallpaper"] = configureTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
-    textures["wallpaper"] = environmentTexture(this.main.gl, "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg");
+    textures["wallpaper"] = environmentTexture(
+      this.main.gl,
+      "https://live.staticflickr.com/65535/51121219693_d9b57aa314_n.jpg"
+    );
     textures["depth"] = configureTexture(
       this.main.gl,
       "https://live.staticflickr.com/65535/51115539946_58d2df30c1_m.jpg"

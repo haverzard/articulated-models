@@ -24,7 +24,6 @@ function colorFrag() {
     uniform sampler2D tex_depth;
     uniform sampler2D tex_norm;
 
-    varying vec3 R;
     uniform samplerCube texMap;
 
     void main() {
@@ -60,7 +59,8 @@ function colorFrag() {
         finalColor = finalColor * texture2D(tex_picture, fTexCoord);
       }
       if (u_texture == 1 && u_TextureMode == 3){
-        // finalColor = textureCube(texMap,R);
+        highp vec3 R = reflect(ts_frag_pos, fNormal);
+        finalColor = finalColor * textureCube(texMap, normalize(R));
       }
       gl_FragColor = finalColor;
   }
