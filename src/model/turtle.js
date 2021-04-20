@@ -329,23 +329,16 @@ class MinecraftTurtleModel extends GeoObject {
     });
   }
 
-  getInstance() {
-    return observer.instances[1]
-  }
-
   draw(gl, shaderProgram) {
     gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 2);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures["turtle_skin"]);
-    gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
+    gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_norm"), 0);
 
     super.draw(gl, shaderProgram);
   }
 
   animate(gl, shaderProgram, frame) {
-    gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 2);
-    gl.bindTexture(gl.TEXTURE_2D, textures["turtle_skin"]);
-    gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
     super.animate(gl, shaderProgram, frame);
   }
 

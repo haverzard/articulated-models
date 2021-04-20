@@ -8,7 +8,6 @@ class Observer {
     this.selected = null;
     this.selectedIdx = null;
     this.animationLoop = null;
-    this.instances = [new MinecraftPigModel(), new MinecraftTurtleModel(), new R3D3()];
     this.objects = [];
     this.mode = MODE.NONE;
     this.projMode = PROJ.NONE;
@@ -71,9 +70,18 @@ class Observer {
       "https://live.staticflickr.com/65535/51115539946_58d2df30c1_m.jpg"
     );
 
+    // define all texture to gl
+    // texture 0
+    this.main.gl.activeTexture(this.main.gl.TEXTURE0);
+    this.main.gl.bindTexture(this.main.gl.TEXTURE_2D, textures["pig_skin"])
+    this.main.gl.uniform1i(this.main.gl.getUniformLocation(this.main.shaderProgram, "tex_normal"), 0);
+    // texture 1
+    this.main.gl.activeTexture(this.main.gl.TEXTURE1);
+    this.main.gl.bindTexture(this.main.gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
+    this.main.gl.uniform1i(this.main.gl.getUniformLocation(this.main.shaderProgram, "tex_env"), 1);
+
     this.drawObjects(this.main.gl, this.main.shaderProgram);
     // setTimeout(() => this.drawObjects(this.main.gl, this.main.shaderProgram), 1000)
-    // this.applyProjection()
   }
 
   initCamConfig() {

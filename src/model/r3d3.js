@@ -205,33 +205,16 @@ class R3D3 extends GeoObject {
         })
     }
 
-    // reconfigureViewModel() {
-    //     var eye = [0.0, 0.0, 1.0];
-    //     var at = [0.0, 0.0, 0.0];
-    //     var up = [0.0, 1.0, 1.0];
-    //     return lookAt(eye, at, up);
-    // }
-    getInstance() {
-        return observer.instances[2];
-      }
-
     draw(gl, shaderProgram) {
-        // const lookAt = this.reconfigureViewModel()
-        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "viewModel"),lookAt);
-        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
-        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"),0);
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"]);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"), 1);
+
         super.draw(gl, shaderProgram)
     }
 
     animate(gl, shaderProgram, frame) {
-        // gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3)
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 2)
-        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
         super.animate(gl, shaderProgram, frame)
     }
 
