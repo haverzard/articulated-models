@@ -89,8 +89,13 @@ function norm2dVertex() {
       } else {
         ts_light_pos = u_light;
         ts_view_pos = u_viewer;
-        ts_frag_pos = vec3(u_Model * u_View * vec4(vPosition, 1.0));
+
         fNormal = vec3(u_Model * u_View * vec4(u_normal, 1));
+        if (u_texture == 1 && u_TextureMode == 3) {
+          ts_frag_pos = mat3(u_Model * u_View) * vPosition;
+        } else {
+          ts_frag_pos = vec3(u_Model * u_View * vec4(vPosition, 1.0));
+        }
       }
     }
     `
