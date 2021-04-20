@@ -46,6 +46,24 @@ class Observer {
     // );
     // a.click();
 
+    // var pig = new MinecraftPigModel()
+    // pig.addTranslation([-0.8, 0, 0])
+    // pig.applyTransformation()
+    // var turtle = new MinecraftTurtleModel()
+    // turtle.addTranslation([0, 0, 0])
+    // turtle.applyTransformation()
+    // var r3d3 = new R3D3()
+    // r3d3.addTranslation([0.8, 0, 0])
+    // r3d3.applyTransformation()
+    // var a = document.createElement("a");
+    // a.download = "model.json";
+    // a.href = window.URL.createObjectURL(
+    //   new Blob([JSON.stringify([pig.parse(),turtle.parse(),r3d3.parse()], null, 2)], {
+    //     type: "application/json",
+    //   })
+    // );
+    // a.click()
+
     this.initCamConfig();
     this.initProjection();
     this.initInputs();

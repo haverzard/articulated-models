@@ -20,9 +20,10 @@ class R3D3 extends GeoObject {
             this.parts[k] = new Cube(null, 1, [1,0.8,0.9])
         })
 
+        var z = 0
 
-        this.parts["head"].addScaling3D([0.4, 0.4, 0.4])
-        this.parts["head"].addTranslation([0, 0.1, -0.5])
+        this.parts["head"].addScaling3D([0.4, 0.3, 0.4])
+        this.parts["head"].addTranslation([0, 0.65, z])
         this.parts["head"].applyTransformation()
         this.parts["head"].id = "head"
         this.parts["head"].mid = [0, 0.1, -0.3]
@@ -30,42 +31,63 @@ class R3D3 extends GeoObject {
             ...this.parts["head"].bound,
             rotate: {
                 activation: [true, false, false],
-                range: [[-90, 90, 1], [], []]
+                range: [[-45,45, 1], [], []]
             }
         }
+        
+        this.parts["head"].FACES.forEach((f) => {
+            this.parts["head"].faces[f].texCoord = texCoordR3D3["head"][f]
+            this.parts["left-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+            this.parts["right-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+            this.parts["left-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+            this.parts["right-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+            this.parts["body"].faces[f].texCoord = texCoordR3D3["body"][f]
+        })
 
-        
-       
-    this.parts["head"].FACES.forEach((f) => {
-        this.parts["head"].faces[f].texCoord = texCoordR3D3["head"][f]
-        this.parts["left-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
-        this.parts["right-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
-        this.parts["left-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
-        this.parts["right-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
-        this.parts["body"].faces[f].texCoord = texCoordR3D3["body"][f]
-      });
-        
-        const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
-        keys.forEach((k, i) => {
-            let x = -0.149
-            let z = -0.25
-            if (Math.floor(i / 2)) z = 0.35
+        const arms = ["right-arm", "left-arm",]
+        arms.forEach((k, i) => {
+            let x = 0.3
+            let z = 0
             if (i % 2) x = -x
-            this.parts[k].addScaling3D([0.2, 0.3, 0.2])
-            this.parts[k].addTranslation([x, -0.35, z])
+            this.parts[k].addScaling3D([0.2, 0.5, 0.2])
+            this.parts[k].addTranslation([x, 0.25, z])
             this.parts[k].applyTransformation()
             this.parts[k].id = k
-            this.parts[k].mid = [0, -0.2, z]
+            this.parts[k].mid = [0, 0.5, z]
             this.parts[k].bound = {
                 ...this.parts[k].bound,
                 rotate: {
                     activation: [true, false, false],
                     range: [[-90, 90, 1], [], []]
                 }
-            }    
+            }
+            console.log(this.parts[k])
         })
 
-        this.parts["body"].addScaling3D([0.5, 0.4, 0.8])
+
+        const keys = ["right-leg", "left-leg"]
+        keys.forEach((k, i) => {
+            let x = 0.17
+            let z = 0
+            if (i % 2) x = -x
+            this.parts[k].addScaling3D([0.15, 0.5, 0.2])
+            this.parts[k].addTranslation([x, -0.65, z])
+            this.parts[k].applyTransformation()
+            this.parts[k].id = k
+            this.parts[k].mid = [0, -0.4, z]
+            this.parts[k].bound = {
+                ...this.parts[k].bound,
+                rotate: {
+                    activation: [true, false, false],
+                    range: [[-90, 90, 1], [], []]
+                }
+            }
+        })
+
+
+
+    
+        this.parts["body"].addScaling3D([0.5, 1, 0.8])
         this.parts["body"].applyTransformation()
         this.parts["body"].id = "body"
         this.parts["body"].bound = {
@@ -84,57 +106,72 @@ class R3D3 extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
+        console.log(this.parts)
     }
 
     genKeyFrames() {
         this.keyframes = {
             "body": [
                 [0, {
-                    translate: [-1.5, 0, -1.5],
-                    rotate: [0, -225, 0],
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -180, 0],
                 }],
                 [2.5, {
-                    translate: [-1.5, 0, -1.5],
+                    translate: [1.5, 0, -2],
                     rotate: [0, -180, 0],
                 }],
                 [22.5, {
-                    translate: [-1.5, 0, 1.5],
+                    translate: [1.5, 0, 2],
                     rotate: [0, -180, 0],
                 }],
                 [27.5, {
-                    translate: [-1.5, 0, 1.5],
-                    rotate: [0, -90, 0],
+                    translate: [1.5, 0, 2],
+                    rotate: [0, -270, 0],
                 }],
                 [47.5, {
-                    translate: [1.5, 0, 1.5],
-                    rotate: [0, -90, 0],
+                    translate: [-1.5, 0, 2],
+                    rotate: [0, -270, 0],
                 }],
                 [52.5, {
-                    translate: [1.5, 0, 1.5],
+                    translate: [-1.5, 0, 2],
                     rotate: [0, 0, 0],
                 }],
                 [72.5, {
-                    translate: [1.5, 0, -1.5],
+                    translate: [-1.5, 0, -2],
                     rotate: [0, 0, 0],
                 }],
                 [77.5, {
-                    translate: [1.5, 0, -1.5],
-                    rotate: [0, 90, 0],
+                    translate: [-1.5, 0, -2],
+                    rotate: [0, -90, 0],
+                }],
+                [90, {
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -180, 0],
+                }],
+                [92.5, {
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -270, 0],
+                }],
+                [95, {
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -0, 0],
                 }],
                 [97.5, {
-                    translate: [-1.5, 0, -1.5],
-                    rotate: [0, 90, 0],
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -90, 0],
                 }],
                 [100, {
-                    translate: [-1.5, 0, -1.5],
-                    rotate: [0, 135, 0],
+                    translate: [1.5, 0, -2],
+                    rotate: [0, -135, 0],
                 }]
+            
             ],
             "head": [
                 [0, {
                     translate: [0, 0, 0],
                     rotate: [0, 0, 0],
-                }]
+                },
+                ]
             ]
         }
         let frames = 5
@@ -143,7 +180,7 @@ class R3D3 extends GeoObject {
                 this.keyframes["head"].push(
                     [frames, {
                         translate: [0, 0, 0],
-                        rotate: [-30 * (1 - (i % 2) * 2), 0, 0],
+                        rotate: [-5 * (1 - (i % 2) * 2), 0, 0],
                     }]
                 )
                 frames += 5
@@ -204,6 +241,7 @@ class R3D3 extends GeoObject {
             }
         })
     }
+    
 
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
