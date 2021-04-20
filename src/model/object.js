@@ -175,11 +175,11 @@ class GeoObject {
                         .addTranslation(deltaState["translate"])
                     // translate back
                     this.parts[partIdx].addTranslation(this.parts[partIdx].mid)
-                    if (partIdx == this.main) {
-                        this.parts[partIdx]
-                            .addTranslation(neg(this.parts[partIdx].mid))
-                    } 
-                }    
+                }
+                if (partIdx == this.main) {
+                    this.parts[partIdx]
+                        .addTranslation(neg(this.parts[partIdx].mid))
+                }
             }
         })
         // draw after everything is set
