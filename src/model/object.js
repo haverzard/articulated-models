@@ -111,20 +111,12 @@ class GeoObject {
     }
 
     getInstance() {
-        return
+        return 
     }
 
     animate(gl, shaderProgram, frame) {
-        var cor = this.getInstance()
-        var mids = []
-        var faces = []
         this.PARTS.forEach((partIdx) => {
             // use instance position instead
-            mids.push(this.parts[partIdx].mid)
-            faces.push(this.parts[partIdx].faces)
-            this.parts[partIdx].mid = cor.parts[partIdx].mid
-            this.parts[partIdx].faces = cor.parts[partIdx].faces
-
             let keyframes = this.keyframes[partIdx]
             if (keyframes) {
                 let idx = null
@@ -183,17 +175,15 @@ class GeoObject {
                         .addTranslation(deltaState["translate"])
                     // translate back
                     this.parts[partIdx].addTranslation(this.parts[partIdx].mid)
+                    if (partIdx == this.main) {
+                        this.parts[partIdx]
+                            .addTranslation(neg(this.parts[partIdx].mid))
+                    } 
                 }    
             }
         })
         // draw after everything is set
         this.draw(gl, shaderProgram)
-        
-        // reset parts
-        this.PARTS.forEach((partIdx, idx) => {
-            this.parts[partIdx].mid = mids[idx]
-            this.parts[partIdx].faces = faces[idx]
-        })
     }
 
     draw(gl, shaderProgram) {

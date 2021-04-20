@@ -49,6 +49,46 @@ function configureTexture(gl, url) {
   return texture
 }
 
+function environmentTexture(gl, url) {
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  
+  const targets = [
+    gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+    gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+    gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+    gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+    gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+    gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+  ]
+
+  targets.forEach((target) => {
+    gl.texImage2D(target, 0, gl.RGBA, 512, 512, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    var image = new Image();
+    image.src = url
+    requestCORSIfNotSameOrigin(image, url);
+    image.onload = () => {
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture)
+      gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      // gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
+      if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+        // gpu support power of 2 only by default
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+      } else {
+        // use padding instead by using wrapping to clamp to edge
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      }
+    }
+  });
+  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  return texture
+}
+
+
 function loadShader(gl, vertCoder, fragCoder) {
   var vertShader = gl.createShader(gl.VERTEX_SHADER)
   gl.shaderSource(vertShader, vertCoder())

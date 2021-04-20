@@ -1,9 +1,9 @@
-class MinecraftPigModel extends GeoObject {
+class R3D3 extends GeoObject {
     constructor(data = null, size = 1) {
         super()
-        this.useTangent = false
-        this.id = "Minecraft Pig"
-        this.PARTS = ["body", "right-arm", "left-arm", "right-leg", "left-leg", "head", "nose"]
+        this.useTangent = false;
+        this.id = "r3d3"
+        this.PARTS = ["body", "right-arm", "left-arm", "right-leg", "left-leg", "head"]
         this.main = "body"
         // load from ext file
         if (data) {
@@ -20,21 +20,6 @@ class MinecraftPigModel extends GeoObject {
             this.parts[k] = new Cube(null, 1, [1,0.8,0.9])
         })
 
-        this.parts["nose"].addScaling3D([0.2, 0.15, 0.1])
-        this.parts["nose"].addTranslation([0, 0.05, -0.7])
-        this.parts["nose"].applyTransformation()
-        this.parts["nose"].id = "nose"
-        this.parts["nose"].mid = [0, 0.05, -0.7]
-        this.parts["nose"].bound = {
-            translate: {
-                activation: [true, true, false],
-                range: [[-0.02, 0.02, 0.001], [-0.02, 0.02, 0.001], []]
-            },
-            rotate: {
-                activation: [true, false, false],
-                range: [[-10, 10, 1], [], []]
-            }
-        }
 
         this.parts["head"].addScaling3D([0.4, 0.4, 0.4])
         this.parts["head"].addTranslation([0, 0.1, -0.5])
@@ -48,16 +33,18 @@ class MinecraftPigModel extends GeoObject {
                 range: [[-90, 90, 1], [], []]
             }
         }
-        this.parts["head"].FACES.forEach((f) => {
-            this.parts["head"].faces[f].texCoord = texCoordPig["head"][f]
-            this.parts["nose"].faces[f].texCoord = texCoordPig["nose"][f]
-            this.parts["left-arm"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["right-arm"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["left-leg"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["right-leg"].faces[f].texCoord = texCoordPig["leg"][f]
-            this.parts["body"].faces[f].texCoord = texCoordPig["body"][f]
-        })
 
+        
+       
+    this.parts["head"].FACES.forEach((f) => {
+        this.parts["head"].faces[f].texCoord = texCoordR3D3["head"][f]
+        this.parts["left-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["right-arm"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["left-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["right-leg"].faces[f].texCoord = texCoordR3D3["leg"][f]
+        this.parts["body"].faces[f].texCoord = texCoordR3D3["body"][f]
+      });
+        
         const keys = ["right-arm", "left-arm", "right-leg", "left-leg"]
         keys.forEach((k, i) => {
             let x = -0.149
@@ -97,7 +84,6 @@ class MinecraftPigModel extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
-        this.parts["head"].addChild(this.parts["nose"])
     }
 
     genKeyFrames() {
@@ -218,12 +204,12 @@ class MinecraftPigModel extends GeoObject {
             }
         })
     }
-    
+
     draw(gl, shaderProgram) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, textures["wallpaper"]);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"), 1);
 
         super.draw(gl, shaderProgram)
     }
@@ -251,13 +237,12 @@ class MinecraftPigModel extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
-        this.parts["head"].addChild(this.parts["nose"])
     }
 
     parse() {
         let parsed = {"parts": {}}
         this.PARTS.forEach((k) => {
-            parsed["parts"][k] = this.parts[k].parse(this.useTangent)
+            parsed["parts"][k] = this.parts[k].parse()
         })
         parsed["id"] = this.id
         parsed["keyframes"] = this.keyframes
@@ -269,6 +254,7 @@ class MinecraftPigModel extends GeoObject {
             this.parts[k].setTransformMatrix(this.TransformMatrix)
             this.parts[k].applyTransformation()
         })
+
         this.resetTransformMatrix()
     }
 }

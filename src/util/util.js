@@ -78,3 +78,65 @@ function getNorm2Vec(v1, v2) {
         return element / lengthVec
     })
 }
+
+function cross(u, v) {
+    var result = [
+      u[1] * v[2] - u[2] * v[1],
+      u[2] * v[0] - u[0] * v[2],
+      u[0] * v[1] - u[1] * v[0]
+    ]
+  
+    return result
+}
+
+function vectorSubs(vec1, vec2) {
+    var res = vec1.map(function (item, index) {
+      return item - vec2[index];
+    })
+    return res
+}
+  
+function normalize(u) {
+    let vlen = mag(u)
+    let res = [...u]
+    for(let i = 0; i < res.length; i++)
+      res[i] /= vlen
+    
+    return res 
+}
+
+
+function mag(u) {
+    return Math.sqrt(
+      Math.pow(u[0], 2) +
+      Math.pow(u[1], 2) + 
+      Math.pow(u[2], 2)
+    )
+  }
+  
+  function dot(u, v) {
+    let sum = 0
+    for(let i = 0; i < 3; i++)
+      sum += (u[i] * v[i])
+    return sum
+  }
+  
+  
+
+function lookAt(eye, at, up) {
+    let v = normalize( vectorSubs(at, eye) ),
+        n = normalize( cross(v, up) ),
+        u = normalize( cross(n, v) )
+    // Negate
+    for(let i = 0; i < 3; i++)
+      v[i] *= (-1)
+    
+    let res = []
+    
+    n.push( -1 * dot(n, eye) )
+    u.push( -1 * dot(u, eye) )
+    v.push( -1 * dot(v, eye) )
+  
+    res.push(n, u, v, [0, 0, 0, 1])
+    return res
+}
