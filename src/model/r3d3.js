@@ -270,11 +270,12 @@ class R3D3 extends GeoObject {
         this.id = data["id"]
         this.keyframes = data["keyframes"]
 
-        this.parts["body"].addChild(this.parts["head"])
-        this.parts["body"].addChild(this.parts["right-arm"])
-        this.parts["body"].addChild(this.parts["left-arm"])
-        this.parts["body"].addChild(this.parts["right-leg"])
-        this.parts["body"].addChild(this.parts["left-leg"])
+        this.PARTS.forEach((k) => {
+            var parent = data["connections"][k]
+            if (parent) {
+                this.parts[parent].addChild(this.parts[k])
+            }
+        })
     }
 
     parse() {
@@ -283,6 +284,16 @@ class R3D3 extends GeoObject {
             parsed["parts"][k] = this.parts[k].parse()
         })
         parsed["id"] = this.id
+        parsed["main"] = this.main
+        // child-parent lines
+        parsed["connections"] = {
+            "body": null,
+            "head": "body",
+            "right-arm": "body",
+            "left-arm": "body",
+            "right-leg": "body",
+            "left-leg": "body",
+        }
         parsed["keyframes"] = this.keyframes
         return parsed
     }

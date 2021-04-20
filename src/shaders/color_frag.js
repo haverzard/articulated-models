@@ -48,7 +48,6 @@ function colorFrag() {
         highp float spec = pow(max(dot(NN, h), 0.0), u_shininess);
         highp float d = (length(ts_light_pos - frag));
 
-        // TODO: IMPROVE SPECULAR
         highp vec3 phong = u_ambient + (dir * Id + spec * Is * 0.01) / (0.2 * pow(d, 2.0) - 1.2 * d + 50.0);
 
         finalColor = vec4(u_color * phong, 1.0);

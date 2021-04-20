@@ -5261,6 +5261,16 @@
           }
         ]
       ]
+    },
+    "main": "body",
+    "connections": {
+      "body": null,
+      "head": "body",
+      "right-arm": "body",
+      "left-arm": "body",
+      "right-leg": "body",
+      "left-leg": "body",
+      "nose": "head"
     }
   },
   {
@@ -10820,6 +10830,18 @@
           }
         ]
       ]
+    },
+    "main": "body",
+    "connections": {
+      "body": null,
+      "head": "body",
+      "shell": "body",
+      "right-arm": "body",
+      "left-arm": "body",
+      "right-leg": "body",
+      "left-leg": "body",
+      "right-eye": "head",
+      "left-eye": "head"
     }
   },
   {
@@ -13142,6 +13164,15 @@
       }
     },
     "id": "r3d3",
+    "main": "body",
+    "connections": {
+      "body": null,
+      "head": "body",
+      "right-arm": "body",
+      "left-arm": "body",
+      "right-leg": "body",
+      "left-leg": "body"
+    },
     "keyframes": {
       "body": [
         [

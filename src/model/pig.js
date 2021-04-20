@@ -246,12 +246,12 @@ class MinecraftPigModel extends GeoObject {
         this.id = data["id"]
         this.keyframes = data["keyframes"]
 
-        this.parts["body"].addChild(this.parts["head"])
-        this.parts["body"].addChild(this.parts["right-arm"])
-        this.parts["body"].addChild(this.parts["left-arm"])
-        this.parts["body"].addChild(this.parts["right-leg"])
-        this.parts["body"].addChild(this.parts["left-leg"])
-        this.parts["head"].addChild(this.parts["nose"])
+        this.PARTS.forEach((k) => {
+            var parent = data["connections"][k]
+            if (parent) {
+                this.parts[parent].addChild(this.parts[k])
+            }
+        })
     }
 
     parse() {
@@ -261,6 +261,17 @@ class MinecraftPigModel extends GeoObject {
         })
         parsed["id"] = this.id
         parsed["keyframes"] = this.keyframes
+        parsed["main"] = this.main
+        // child-parent lines
+        parsed["connections"] = {
+            "body": null,
+            "head": "body",
+            "right-arm": "body",
+            "left-arm": "body",
+            "right-leg": "body",
+            "left-leg": "body",
+            "nose": "head",
+        }
         return parsed
     }
 

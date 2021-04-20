@@ -5261,6 +5261,16 @@
           }
         ]
       ]
+    },
+    "main": "body",
+    "connections": {
+      "body": null,
+      "head": "body",
+      "right-arm": "body",
+      "left-arm": "body",
+      "right-leg": "body",
+      "left-leg": "body",
+      "nose": "head"
     }
   }
 ]
