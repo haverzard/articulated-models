@@ -48,7 +48,6 @@ class MinecraftPigModel extends GeoObject {
                 range: [[-90, 90, 1], [], []]
             }
         }
-        console.log(this.parts["head"])
         this.parts["head"].FACES.forEach((f) => {
             this.parts["head"].faces[f].texCoord = texCoordPig["head"][f]
             this.parts["nose"].faces[f].texCoord = texCoordPig["nose"][f]
@@ -220,10 +219,6 @@ class MinecraftPigModel extends GeoObject {
         })
     }
 
-    getInstance() {
-        return observer.instances[0]
-      }
-    
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
         gl.activeTexture(gl.TEXTURE0);
@@ -234,9 +229,6 @@ class MinecraftPigModel extends GeoObject {
     }
 
     animate(gl, shaderProgram, frame) {
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1)
-        gl.bindTexture(gl.TEXTURE_2D, textures["pig_skin"])
-        gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0);
         super.animate(gl, shaderProgram, frame)
     }
 
