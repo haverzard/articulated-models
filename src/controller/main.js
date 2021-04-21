@@ -495,6 +495,8 @@ class Observer {
 
   _initObjectButtons() {
     document.getElementById("btn-container").innerHTML = "";
+    document.getElementById("btn-container2").innerHTML = "";
+    document.getElementById("model-transformation").style.display = "none";
     for (let i = 0; i < this.objects.length; i++) {
       var button = document.createElement("button");
       button.textContent = this.objects[i].id;
