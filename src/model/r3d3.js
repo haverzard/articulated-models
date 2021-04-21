@@ -61,7 +61,6 @@ class R3D3 extends GeoObject {
                     range: [[-90, 90, 1], [], []]
                 }
             }
-            console.log(this.parts[k])
         })
 
 
@@ -106,7 +105,6 @@ class R3D3 extends GeoObject {
         this.parts["body"].addChild(this.parts["left-arm"])
         this.parts["body"].addChild(this.parts["right-leg"])
         this.parts["body"].addChild(this.parts["left-leg"])
-        console.log(this.parts)
     }
 
     genKeyFrames() {
