@@ -48,7 +48,6 @@ class Observer {
     this.main.gl.uniform1i(this.main.gl.getUniformLocation(this.main.shaderProgram, "tex_env"), 1);
 
     this.drawObjects(this.main.gl, this.main.shaderProgram);
-    // setTimeout(() => this.drawObjects(this.main.gl, this.main.shaderProgram), 1000)
   }
 
   initCamConfig() {

@@ -239,7 +239,6 @@ class R3D3 extends GeoObject {
             }
         })
     }
-    
 
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 3);
@@ -248,16 +247,6 @@ class R3D3 extends GeoObject {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"), 1);
 
         super.draw(gl, shaderProgram)
-    }
-
-    animate(gl, shaderProgram, frame) {
-        super.animate(gl, shaderProgram, frame)
-    }
-
-    reset() {
-        this.PARTS.forEach((k) => {
-            this.parts[k].resetTransformMatrix()
-        })
     }
 
     _toShape(data) {

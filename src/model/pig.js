@@ -15,18 +15,6 @@ class MinecraftPigModel extends GeoObject {
         this.applyTransformation()
     }
 
-
-    applyTransformation(perm = true) {
-    
-        // apply transformation
-        this
-          .addRotateX(this.state["rotate"][0])
-          .addRotateY(this.state["rotate"][1])
-          .addRotateZ(this.state["rotate"][2])
-          .addTranslation(this.state["translate"]);
-      }
-    
-
     _generate() {
         this.parts = {}
         this.PARTS.forEach((k) => {
@@ -239,16 +227,6 @@ class MinecraftPigModel extends GeoObject {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "tex_picture"), 0);
 
         super.draw(gl, shaderProgram)
-    }
-
-    animate(gl, shaderProgram, frame) {
-        super.animate(gl, shaderProgram, frame)
-    }
-
-    reset() {
-        this.PARTS.forEach((k) => {
-            this.parts[k].resetTransformMatrix()
-        })
     }
 
     _toShape(data) {

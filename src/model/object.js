@@ -106,6 +106,23 @@ class GeoObject {
         return this
     }
 
+    loadState() {
+        this.resetTransformMatrix()
+            .addTranslation(neg(this.mid))
+            .addRotateX(this.state["rotate"][0])
+            .addRotateY(this.state["rotate"][1])
+            .addRotateZ(this.state["rotate"][2])
+            .addTranslation(this.state["translate"])
+            .addTranslation(this.mid)
+    }
+
+    reset() {
+        this.PARTS.forEach((k) => {
+            this.parts[k].resetTransformMatrix()
+            this.parts[k].loadState()
+        })
+    }
+
     applyTransformation() {
         return
     }

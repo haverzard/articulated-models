@@ -61,6 +61,7 @@ class Cube extends GeoObject {
         this.shading = data["shading"]
         this.texture = data["texture"]
         this.state = data["state"]
+        this.loadState()
     }
 
     parse(useTangent=true) {

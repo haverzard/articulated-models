@@ -338,16 +338,6 @@ class MinecraftTurtleModel extends GeoObject {
     super.draw(gl, shaderProgram);
   }
 
-  animate(gl, shaderProgram, frame) {
-    super.animate(gl, shaderProgram, frame);
-  }
-
-  reset() {
-    this.PARTS.forEach((k) => {
-      this.parts[k].resetTransformMatrix();
-    });
-  }
-
   _toShape(data) {
     this.parts = {};
     this.PARTS.forEach((k) => {
