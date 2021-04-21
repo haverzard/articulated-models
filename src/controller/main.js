@@ -140,6 +140,7 @@ class Observer {
         }
         this.drawObjects(this.main.gl, this.main.shaderProgram);
       }
+
     };
 
     modes.forEach((k) => {
@@ -253,6 +254,19 @@ class Observer {
       document.getElementById("texture-btn").classList.toggle("selected-on");
       this.drawObjects(this.main.gl, this.main.shaderProgram);
     };
+    document.getElementById("save-btn").onclick = () => {
+      var models = []
+      this.objects.forEach((object) => {
+        models.push(object.parse())
+      })
+
+      var a = document.createElement('a')
+      a.download = 'model.json'
+      a.href = window.URL.createObjectURL(
+        new Blob([JSON.stringify(models, null, 2)], { type: 'application/json' }),
+      )
+      a.click()
+    }
   }
 
   applyTransformation(perm = false) {

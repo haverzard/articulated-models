@@ -28,8 +28,11 @@
         <section id="workspace">
           <div>
             <div id="myDIV">
+   
               <button id="animate-btn">Start Animate</button>
               <button id="while-animate-btn">Pause Animation</button>
+              <button id="save-btn">Save</button>
+        
               <input type="file" id="file-uploader" />
             </div>
             <canvas id="main-view" width="800" height="500"></canvas>
@@ -188,22 +191,26 @@
             </div>
         </div>
         </section>
-        <!-- <section id="help" class="hide-menu">
+        <section id="help" class="hide-menu">
           <div class="help-container">
             <h1>User Manual</h1>
             <h3>Load objek</h3>
             <ol>
-              <li>Pada ujung kiri atas, kliklah tombol load;</li>
-              <li>Pilihlah berkas JSON model yang bersesuaian, lalu klik load;</li>
-              <li>Model objek akan muncul di kanvas.</li>
+              <li>Pilih Choose File untuk upload model dalam bentuk .json</li>
+              <li>Setelah object berhasil di load, maka pada right panel bagian atas akan muncul tombol dengan nama model, Tekan tombol itu, untuk melakukan transformasi pada bagian-bagian model</li>
+              <li>Gunakan 4 tombol di right panel di bawah tulisan Projection untuk mengganti jenis projection</li>
+              <li>Gunakan input slider dan text yang berada di right panel di bawah tulisan Camera Config untuk merotasi model dan melakukan configurasi kamera</li>
+              <li>Tekan tombol start animate untuk memulai animasi.Untuk menghentikan animasi(permanen) tekan tombol yang sama</li>
+              <li>Untuk menghentikan animasi(sementara) gunakan tombol pause animation</li>
+              <li>Untuk menyimpan model yang telah dimanipulasi, gunakan tombol save</li>
             </ol>
           </div>
-        </section> -->
+        </section>
       </div>
     </div>
-    <!-- <button id="help-btn" onclick="toggleHelpMenu()">
+    <button id="help-btn" onclick="toggleHelpMenu()">
       Help ?
-    </button> -->
+    </button>
     <script src="gl.js"></script>
   </body>
 </html>

@@ -12,7 +12,19 @@ class MinecraftPigModel extends GeoObject {
         }
         this._generate()
         this.genKeyFrames()
+        this.applyTransformation()
     }
+
+
+    applyTransformation(perm = false) {
+        // apply transformation
+        this
+          .addRotateX(this.transform["rotate"][0])
+          .addRotateY(this.transform["rotate"][1])
+          .addRotateZ(this.transform["rotate"][2])
+          .addTranslation(this.transform["translate"]);
+      }
+    
 
     _generate() {
         this.parts = {}

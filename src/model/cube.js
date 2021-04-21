@@ -58,25 +58,31 @@ class Cube extends GeoObject {
         this.id = data["id"]
         this.bound = data["bound"]
         this.mid = data["mid"]
+        this.shading = data["shading"]
+        this.texture = data["texture"]
+        // this.state = data["state"]
     }
 
     parse(useTangent=true) {
         let parsed = {}
         this.FACES.forEach((k) => {
             parsed[k] = {
-                "vertices": to3D(matMult(to4D(this.faces[k].vertices), transpose(this.TransformMatrix))),
+                "vertices": this.faces[k].vertices,
+                "normal" : this.faces[k].normal,
                 "color": this.faces[k].color,
-                "normal": to3D(matMult(to4D([this.faces[k].normal]), transpose(this.TransformMatrix)))[0],
                 "shininess": this.faces[k].shininess,
                 "texCoord": this.faces[k].texCoord
             }
             if (useTangent) {
-                parsed[k]["tangent"] = to3D(matMult(to4D([this.faces[k].tangent]), transpose(this.TransformMatrix)))[0]
+                parsed[k]["tangent"] = this.faces[k].tangent
             }
         })
         parsed["mid"] = this.mid
         parsed["id"] = this.id
         parsed["bound"] = this.bound
+        parsed["shading"] = this.shading
+        parsed["texture"] = this.texture
+        // parsed["state"] = this.state
         return parsed
     }
 

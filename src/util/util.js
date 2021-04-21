@@ -3,6 +3,8 @@ const FRAMES = 200
 const MODE = Object.freeze({ NONE: null, ROTATE: "rotate", TRANSLATE: "translate" })
 const PROJ = Object.freeze({ ORTHO: "ortho", PSPEC: "pspec", OBLIQUE: "oblique"})
 
+
+
 function normalizeX(canvas, x) {
     return (x * 2) / canvas.width - 1
 }
@@ -140,3 +142,4 @@ function lookAt(eye, at, up) {
     res.push(n, u, v, [0, 0, 0, 1])
     return res
 }
+
