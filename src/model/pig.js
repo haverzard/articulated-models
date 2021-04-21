@@ -218,7 +218,7 @@ class MinecraftPigModel extends GeoObject {
             }
         })
     }
-
+    
     draw(gl, shaderProgram) {
         gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_TextureMode"), 1);
         gl.activeTexture(gl.TEXTURE0);
