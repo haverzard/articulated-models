@@ -16,13 +16,14 @@ class MinecraftPigModel extends GeoObject {
     }
 
 
-    applyTransformation(perm = false) {
+    applyTransformation(perm = true) {
+    
         // apply transformation
         this
-          .addRotateX(this.transform["rotate"][0])
-          .addRotateY(this.transform["rotate"][1])
-          .addRotateZ(this.transform["rotate"][2])
-          .addTranslation(this.transform["translate"]);
+          .addRotateX(this.state["rotate"][0])
+          .addRotateY(this.state["rotate"][1])
+          .addRotateZ(this.state["rotate"][2])
+          .addTranslation(this.state["translate"]);
       }
     
 

@@ -60,7 +60,7 @@ class Cube extends GeoObject {
         this.mid = data["mid"]
         this.shading = data["shading"]
         this.texture = data["texture"]
-        // this.state = data["state"]
+        this.state = data["state"]
     }
 
     parse(useTangent=true) {
@@ -82,7 +82,7 @@ class Cube extends GeoObject {
         parsed["bound"] = this.bound
         parsed["shading"] = this.shading
         parsed["texture"] = this.texture
-        // parsed["state"] = this.state
+        parsed["state"] = this.state
         return parsed
     }
 
