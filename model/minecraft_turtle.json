@@ -407,7 +407,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "right-arm": {
         "front": {
@@ -791,7 +803,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "left-arm": {
         "front": {
@@ -1175,7 +1199,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "right-leg": {
         "front": {
@@ -1559,7 +1595,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "left-leg": {
         "front": {
@@ -1943,7 +1991,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "head": {
         "front": {
@@ -2327,7 +2387,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "shell": {
         "front": {
@@ -2715,7 +2787,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "left-eye": {
         "front": {
@@ -3099,7 +3183,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "right-eye": {
         "front": {
@@ -3483,7 +3579,19 @@
           }
         },
         "shading": true,
-        "texture": true
+        "texture": true,
+        "state": {
+          "translate": [
+            0,
+            0,
+            0
+          ],
+          "rotate": [
+            0,
+            0,
+            0
+          ]
+        }
       }
     },
     "id": "Turtle",
